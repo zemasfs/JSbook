@@ -1,0 +1,289 @@
+---
+title: "Aplicando estruturas de controle no JSPlotly"
+format:
+  html:
+    page-layout: full
+    theme: zephyr   # pode trocar o tema à vontade
+    toc: true
+
+include-in-header:
+  - text: |
+      <style>
+      :root{
+        --lv-sidebar-w: 330px;
+        --lv-side-solid: #e8f0ff;  /* cor da sidebar */
+        --lv-main-solid: #f5f8fc;  /* <<< cor do CONTEÚDO */
+      }
+      /* use cores sólidas: */
+      #quarto-sidebar{ background: var(--lv-side-solid) !important; }
+      main.content,
+      #quarto-margin-sidebar{
+        background: var(--lv-main-solid) !important;
+      }
+      /* opcional: reduzir o espaço entre colunas */
+      #quarto-content.page-columns{ gap: 10px 16px; }
+      #quarto-sidebar{ width: var(--lv-sidebar-w); }
+      </style>
+
+  - text: |
+      <style>
+         /* ===== largura máxima do conteúdo ===== */
+        :root { --content-max-width: 1600px; }
+
+        /* ===== cores utilitárias (suas classes) ===== */
+        .red  { color: #e53935; }
+        .blue { color: dodgerblue; }
+        .green {color: green}
+        .darkblue  { color: #003366; }   /* azul escuro */
+        .darkgreen { color: #006400; }   /* verde escuro */
+        .orange    { color: #ff8c00; }   /* laranja */
+        .purple    { color: #800080; }   /* roxo */
+        .note { color:#6f42c1; background:#f3e8ff; padding:2px 6px; border-radius:6px; }
+       </style>
+
+---
+
+
+
+|    Agora o *mais chique*...aplicar as estruturas de controle no próprio aplicativo ! Relembrando o quadro de estruturas..
+\
+
+```{.javascript}
+// Condicionais
+
+if      // executa um bloco de código se uma condição for verdadeira
+else    // executa um bloco de código se a condição do if for falsa
+else if // verifica múltiplas condições em sequência
+switch  // executa diferentes blocos de código com base no valor de uma expressão
+
+// Repetição
+
+for       // laço com contador: inicialização; condição; atualização — ideal quando o nº de iterações é conhecido
+while     // laço por condição: repete enquanto a condição for verdadeira (condição testada ANTES de cada volta)
+do while  // laço pós-teste: executa AO MENOS uma vez e repete enquanto a condição for verdadeira (testada DEPOIS)
+```
+\
+
+## Estruturas condicionais no JSPlotly
+
+|   Para as estruturas condicionais, seguem alguns exemplos.
+
+### IF  
+
+```{.javascript}
+
+// IF
+
+const x = [0, 1, 2];         // experimente tirar um ponto e ver o resultado
+const y = [0, 2, 4];
+
+let mode = "lines+markers";
+if (x.length < 3) {       // condição
+  mode = "markers";       // ação se verdadeiro
+}
+
+Plotly.newPlot("grafico", [{ x, y, mode, name: "dados" }], { title: "if: linhas só com >= 3 pontos" });
+
+
+```
+\
+
+|   Nesse exemplo, desenha linhas apenas se houver pontos suficientes; caso contrário, só marcadores. Teste no *JSPlotly vivo* que segue, *delete*(ando) o código padrão e o substituindo pelo acima.
+
+
+```{=html}
+<div style="margin:1rem 0; padding-right:16px;">
+  <iframe src="apps/JSPlotly2q.html"
+          width="100%" height="760"
+          style="border:0;border-radius:10px;"></iframe>
+</div>
+```
+\
+
+|   Observe que, se retirar qualquer ponto, o traço do gráfico se converterá para pontos, apenas (*marker*).
+
+### IF...ELSE
+
+```{.javascript}
+
+const x = Array.from({length: 21}, (_, i) => i);
+const y = x.map(v => v*v*0.1); // cresce
+
+const maxY = Math.max(...y);
+let layout = { title: "if/else: trava o eixo se y for grande" };
+
+if (maxY > 15) {
+  layout.yaxis = { range: [0, 15] };   // verdadeiro → trava
+} else {
+  layout.yaxis = { autorange: true };  // falso → auto
+}
+
+Plotly.newPlot("grafico", [{ x, y, mode: "lines" }], layout);
+
+```
+\
+
+|   Nesse outro exemplo, se a máxima de *y* ultrapassar o limite, o código fixa o *range* do eixo; senão, deixa como *auto.* Experimente mudar o valor de *15* do eixo para valores menores, e verá que o eixo *y* não ultrapassa *15*. Por outro lado, experimente colocar um teto de *150* em *maxY*, e perceberá que o eixo agora ajusta-se automaticamente.
+
+### ELSE IF
+
+```{.javascript}
+const x = [0, 1, 2, 3];
+const y = [2, 2.1, 2.2, 2.3]; // quase horizontal → slope ~ 0
+
+// estimativa simples da inclinação final
+const slope = (y[y.length-1] - y[0]) / (x[x.length-1] - x[0]);
+
+let color, titulo;
+if (slope > 0.05) {
+  color = "green"; titulo = "Crescente";
+} else if (slope < -0.05) {
+  color = "red";   titulo = "Decrescente";
+} else {
+  color = "orange"; titulo = "Quase constante";
+}
+
+Plotly.newPlot("grafico", [{
+  x, y, mode: "lines+markers",
+  line: { color }, marker: { color }
+}], { title: `else if: tendência ${titulo}` });
+
+```
+
+|   Aqui a cor do traço dependerá da inclinação média dos pontos (*const slope*), incidindo também no título do gráfico. Para obter inclinações que correpondam às 3 situações do código, basta variar para valores significativos negativos (*descendente*), positivos (*ascendente*) ou muito próximos (*quase constante*).
+
+### SWITCH
+
+```{.javascript}
+const tipo = "barras";  // troque entre "dispersao", "barras", "box"
+
+let data, layout = { title: `switch: tipo = ${tipo}` };
+
+switch (tipo) {
+  case "dispersao":
+    data = [{ x: [0,1,2,3], y: [1,4,9,16], mode: "markers", name: "pontos" }];
+    break;
+  case "barras":
+    data = [{ x: ["A","B","C"], y: [5, 3, 7], type: "bar", name: "contagens" }];
+    break;
+  case "box":
+    data = [{ y: [1,2,2,3,10], type: "box", name: "distribuição" }];
+    break;
+  default:
+    data = [{ x: [0,1], y: [0,1], mode: "lines", name: "fallback" }];
+}
+
+Plotly.newPlot("grafico", data, layout);
+
+```
+\
+
+|   Aqui o gráfico é gerado por opções introduzidas na constante *tipo* do código, perfazendo barras, dispersão ou box-plot.
+
+## Estrutura de repetição
+
+### FOR
+
+```{.javascript}
+const x = [], y = [];
+for(let i=0; i<=20; i++){
+  x.push(i);
+  y.push(i*i);
+}
+Plotly.newPlot("grafico", [{x, y, mode:"lines+markers", name:"y = x^2"}],
+               {title:"for (basico)"} );
+
+```
+\
+
+|   No exemplo é solicitado que o código gere pontos no intervalo de *x* entre 0 e 20, aplicando-se a função *y=x^2* ("qualquer semelhança é mera coincidência").
+
+
+```{=html}
+<div style="margin:1rem 0; padding-right:16px;">
+  <iframe src="apps/JSPlotly2q.html"
+          width="100%" height="760"
+          style="border:0;border-radius:10px;"></iframe>
+</div>
+```
+\
+
+#### FOR...IN
+
+```{.javascript}
+
+const base = [1,2,3,4,5];
+const x = [...base];
+const y = new Array(base.length);
+
+for (const i in base){              // i são indices: "0","1","2"...
+  y[i] = base[i] * 10;
+}
+Plotly.newPlot("grafico", [{x, y, type:"bar", name:"base*10"}],
+               {title:"for...in (indices)"} );
+
+
+```
+
+
+|   O exemplo itera sobre indices (chaves) do *array* e multiplica os valores.
+
+#### FOR...OF
+
+```{.javascript}
+
+const x = Array.from({length: 21}, (_, i) => i);  // 0..20
+const y = [];
+for (const v of x){            // v sao os valores de x
+  y.push(0.5*v + 1);
+}
+Plotly.newPlot("grafico", [{x, y, mode:"lines", name:"y = 0.5x + 1"}],
+               {title:"for...of (valores)"} );
+
+```
+
+
+|   Aqui o exemplo percorre valores e calcula "y = 0.5*x + 1".
+
+### WHILE
+
+```{.javascript}
+
+const x = [], y = [];
+let i = 0, soma = 0;
+while (soma < 50){
+  x.push(i);
+  soma += i;     // acumulando
+  y.push(soma);
+  i++;
+}
+Plotly.newPlot("grafico", [{x, y, mode:"lines+markers", name:"acumulo"}],
+               {title:"while (acumulo ate limite)"} );
+
+```
+
+
+|   Já nesse exemplo, o código permite uma soma cumulativa ate atingir o limite (ex.: cresce até y >= 50).
+
+### DO...WHILE
+
+```{.javascript}
+
+const passos = 20;
+const x = [], y = [];
+let i = 0, pos = 0;
+do {
+  x.push(i);
+  // passo aleatorio: -1, 0 ou +1
+  pos += Math.sign(Math.random() - 0.5);
+  y.push(pos);
+  i++;
+} while (i <= passos);
+
+Plotly.newPlot("grafico", [{x, y, mode:"lines+markers", name:"random walk"}],
+               {title:"do...while (pelo menos uma vez)"} );
+
+```
+
+
+|   Neste último exemplo para laços de repetição, o código garante pelo menos uma iteracão.

@@ -1,0 +1,427 @@
+---
+title: "Mais estrutura"
+format:
+  html:
+    page-layout: full
+    theme: zephyr   # pode trocar o tema à vontade
+    toc: true
+include-in-header:
+  - text: |
+      <style>
+      :root{
+        --lv-sidebar-w: 330px;
+        --lv-side-solid: #e8f0ff;  /* cor da sidebar */
+        --lv-main-solid: #f5f8fc;  /* <<< cor do CONTEÚDO */
+      }
+      /* use cores sólidas: */
+      #quarto-sidebar{ background: var(--lv-side-solid) !important; }
+      main.content,
+      #quarto-margin-sidebar{
+        background: var(--lv-main-solid) !important;
+      }
+      /* opcional: reduzir o espaço entre colunas */
+      #quarto-content.page-columns{ gap: 10px 16px; }
+      #quarto-sidebar{ width: var(--lv-sidebar-w); }
+      </style>
+
+  - text: |
+      <style>
+         /* ===== largura máxima do conteúdo ===== */
+        :root { --content-max-width: 1600px; }
+
+        /* ===== cores utilitárias (suas classes) ===== */
+        .red  { color: #e53935; }
+        .blue { color: dodgerblue; }
+        .green {color: green}
+        .darkblue  { color: #003366; }   /* azul escuro */
+        .darkgreen { color: #006400; }   /* verde escuro */
+        .orange    { color: #ff8c00; }   /* laranja */
+        .purple    { color: #800080; }   /* roxo */
+        .note { color:#6f42c1; background:#f3e8ff; padding:2px 6px; border-radius:6px; }
+       </style>
+
+---
+
+|   Neste capítulo será ilustrado a estrutura de *JavaScript* para aritmética, *arrays* (vetores), funções, geração de números aleatórios, e objetos. 
+
+|   Como são exemplificados diversas linhas para cada, e partindo-se do pressuposto que você já deve estar um pouco cansado de utilizar o `print` recursivamente (embora tivesse sido intencional, he, he), segue um trecho que permite um copia/colar direto para todos os comandos de uma só vez.
+
+|   Na prática, é só separar cada comando por *";'* seguido de `print()`.
+\
+
+## Aritmética
+
+|   Diversas operações matemáticas são possíveis, quer pelo *JavaScript* puro, quer pela instalação de bibliotecas específicas, tais como *mathjs* ou *numjs*. Segue abaixo uma lista de operações aritméticas realizadas com a linguagem:
+
+1. \+ : adição de números ou concatenação de texto (*strings*);
+2. \- : subtração;
+3. \* : multiplicação;
+4. / : divisão;
+5. % : módulo;
+6. ++ : incremento de valor;
+7. \-- : decremento;
+8. ** : exponenciação.
+
+*Obs: * o operador de módulo *%* divide o primeiro operando pelo segundo operando e retorna o resto.
+
+|   Os exemplos a seguir ilustram o uso desses operadores aritméticos, bem como de algumas constantes matemáticas. Para testá-los, cole  no *JSPlotly* customizado, e que segue também abaixo. Você pode experimentá-los separadamente ou em bloco.
+
+
+```{.javascript}
+let resultado = 0;
+
+resultado = 5 + 3;                 print("5 + 3 = ", resultado);          // 8
+resultado = 10 - 4;                print("10 - 4 = ", resultado);          // 6
+resultado = 6 * 7;                 print("6 * 7 = ", resultado);           // 42
+resultado = 20 / 5;                print("20 / 5 = ", resultado);          // 4
+resultado = 17 % 3;                print("17 % 3 = ", resultado);          // 2
+resultado = 2 ** 3;                print("2 ** 3 = ", resultado);          // 8
+let contador = 5; contador++;      print("contador++ = ", contador);       // 6
+let decrementar = 8; decrementar--;print("decrementar-- = ", decrementar); // 7
+let soma = 10; soma += 5;          print("soma += 5 = ", soma);            // 15
+let diferenca = 20; diferenca -= 7;print("diferença -= 7 = ", diferenca);   // 13
+let produto = 3; produto *= 4;     print("produto *= 4 = ", produto);       // 12
+let quociente = 24; quociente /= 3;print("quociente /= 3 = ", quociente);   // 8
+resultado = Math.sqrt(25);         print("sqrt(25) = ", resultado);         // 5
+resultado = Math.abs(-15);         print("abs(-15) = ", resultado);         // 15
+resultado = Math.floor(7.8);       print("floor(7.8) = ", resultado);       // 7
+resultado = Math.ceil(7.2);        print("ceil(7.2) = ", resultado);        // 8
+resultado = Math.round(9.4);       print("round(9.4) = ", resultado);       // 9
+resultado = Math.max(42, 27);      print("max(42,27) = ", resultado);       // 42
+resultado = Math.min(42, 27);      print("min(42,27) = ", resultado);       // 27
+resultado = Math.sin(Math.PI/2);   print("sin(π/2) = ", resultado); 
+```
+
+```{=html}
+<div style="margin:1rem 0; padding-right:16px;">
+  <iframe src="apps/JSPlotly_treinoJS.html"
+          width="100%" height="760"
+          style="border:0;border-radius:10px;"></iframe>
+</div>
+```
+
+
+## Arrays
+
+|   Um *array* em *JavaScript* representa uma estrutura de dados para armazenamento de elementos ordenados. Esses elementos podem envolver qualquer tipo de dado, como números, strings, objetos, etc. Na prática, um *array* pode ser criado, acessado, filtrado, ou mapeado. Seguem exemplos:
+
+
+#### Criação {.unnumbered}
+
+```{.javascript}
+const numeros = [1, 2, 3, 4, 5];
+const cores = ['vermelho', 'verde', 'azul'];
+```
+
+#### Acesso {.unnumbered}
+
+```{.javascript}
+print(numeros[0]);
+print(cores[2]);
+```
+
+
+#### Mapeamento (`map`) {.unnumbered}
+
+```{.javascript}
+const numeros = [1, 2, 3, 4, 5];
+const quadrados = numeros.map(numero => numero * numero);
+print(quadrados);
+```
+
+
+### Uma palavrinha sobre métodos
+
+|   Observe que, diferente do que já foi explicitado, agora aparece um comando múltiplo, como *"numeros.map"*. Existe uma infinidade de comandos com esta sintaxe em *JS*. Ele representa a função que será aplicada a cada elemento do array *numeros* pelo *método map*. Além disso, surge a sintaxe *"=>"* ou sintaxe de *arrow function* (função de seta), uma forma concisa de atribuir um mapeamento. Assim, o comando inteiro:
+\
+
+```{.javascriptALSE}
+const quadrados = numeros.map(numero => numero * numero)
+
+...traduz-se como...
+
+"recebe um numero como parâmetro e retorna o seu quadrado (numero * numero)"
+
+```
+
+
+|   Em *JavaScript* *objetos* são tratados como no mundo real, ou seja, possuem *atributos* e *comportamentos*. Atributos descrevem as características que um objeto possui, e os comportamentos as ações que podem realizar. A notação em *JS* para referenciar as propriedades de um objeto podem ser, alternativamente:
+
+```{.javascript}
+objeto.propriedade
+
+...ou...
+
+objeto[propriedade]
+
+```
+
+
+|   Além disso, existe um número finito de objetos internos de *JavaScript*, explicitados abaixo. Note que esses objetos *built-in* começam sempre com *letra maiúscula*.
+
+```{.javascript}
+1. String:  texto;
+2. Number: objeto criado para valores;
+3. Boolean: true/false;
+4. Object: objeto definido pelo usuário;
+5. Date: objeto contendo componentes de data e tempo;
+6. Array: objeto que armazena ítens indexados de dados;
+7. RegExp: objeto que descreve o padrão de uma expressão regular.;
+8. Math: objeto que define propriedades e métodos matemáticos;
+9. Error: objeto que informa detalhes sobre um erro.
+```
+
+
+
+
+
+|   Voltando ao exemplo acima e esmiuçando-o um pouquinho mais, o *método map()* é chamado no *array numeros* (um *Array.prototype*). O *protótipo* permite transmitir propriedades e métodos para um objeto *JS*. No caso, o *método map()* itera sobre cada elemento do array original, aplica uma função a cada um deles e retorna um novo array com os resultados. Assim, *numero => numero * numero* é a *função de seta*. E nesse caso, *numero* é o parâmetro de entrada da função, um atalho para o elemento atual do *array* sendo processado pelo *map*. Em adição, *"=>"* representa o separador entre o(s) parâmetro(s) e o corpo da função. Finalmente, *"numero * numero"* é a expressão que é executada, com o resultado sendo retornado pela função.
+\
+
+|   Seguem outros exemplos para arrays e mapeamento:
+\
+
+```{.javascript}
+ const x = [0, 1, 2, 3, 4];
+ const y = x.map(valor => Math.pow(2, valor))
+ print(y);
+```
+
+
+```{.javascript}
+const Vmax = 100;
+const Km = 10;
+const S_values = Array.from({length: 10}, (_, i) => i * 5);
+
+const V_values = S_values.map(S => (Vmax * S) / (Km + S));
+
+print("Valores de S:", S_values);
+print("Valores de V:", V_values);
+```
+\
+
+#### Filtragem {.unnumbered}
+
+```{.javascript}
+const numeros = [1, 2, 3, 4, 5];
+const pares = numeros.filter(numero => numero % 2 === 0);  // (`filter`)
+print(pares);
+
+numeros.forEach(numero => print(numero * 2));  // `forEach()`
+```
+\
+
+
+```{=html}
+<div style="margin:1rem 0; padding-right:16px;">
+  <iframe src="apps/JSPlotly_treinoJS.html"
+          width="100%" height="760"
+          style="border:0;border-radius:10px;"></iframe>
+</div>
+```
+
+
+
+### Um pouco mais sobre sobre os métodos ilustrados acima
+
+
+|   Com o mesmo raciocínio empregado, os métodos empregados acima podem ser traduzidos como:
+\
+
+```{.javascript}
+1.  const y = x.map(valor => Math.pow(2, valor))
+...
+Cria um novo array y aplicando Array.prototype.map sobre x: para cada valor, usa Math.pow(base, expoente) para calcular 2^valor;
+
+2. const S_values = Array.from({length: 10}, (_, i) => i * 5);
+...
+Usa Array.from com o objeto { length: 10 } (propriedade length) e uma função mapeadora (_, i) para gerar 10 valores, cada um igual a índice multiplicado por 5 (× 5) → [0,5,10,...,45];
+
+3. const pares = numeros.filter(numero => numero % 2 === 0);  
+...
+Aplica Array.prototype.filter a numeros e mantém apenas os itens cujo resto da divisão por 2 (%) é zero — ou seja, números pares.
+```
+
+
+## JavaScript, uma linguagem orientada a objetos
+
+|   Ainda que o esforço para traduzir os comandos acima possa auxliar como funciona a linguagem, é por óbvio esperar uma certa confusão de termos. Sendo assim, vamos subindo de nível ....!
+
+|   Como diz o título acima, *JS* é uma linguagem orientada a objetos. Isso significa que o código é organizado em torno de *objetos*, que combinam dados (*propriedades*) e comportamentos (*métodos*) para modelar entidades do mundo real. Isso permite um código mais modular, reutilizável e fácil de gerenciar, ao organizar a lógica em *"partes"* menores e mais compreensíveis (*pensamento computacional*). 
+
+
+### Objetos, propriedades, e métodos
+
+|   Um *objeto* é uma estrutura que agrupa dados e comportamentos. Os dados ficam guardados em *propriedades*, e os comportamentos são implementados por *métodos* (funções dentro do objeto). Assim, propriedade são pares nome–valor armazenados dentro de um objeto, podendo variar como  números, textos, arrays, e outros objetos. Já os métodos são funções associadas a um objeto, e que descrevem ações que ele pode executar.
+
+
+|   Objetos em *JS*  ["podem ser comparados a objetos da vida real"](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Working_with_objects), e guardam informações relacionadas entre si. Por exemplo, o objeto *"ponto"* abaixo representa um ponto no plano:
+
+```{r, eval=FALSE}
+const ponto = { x: 2, y: 5 };  // objeto com duas propriedades
+```
+\
+
+|   Assim, as propriedades são as características do objeto:
+
+```{r, eval=FALSE}
+
+print(ponto.x);  // mostra 2
+print(ponto.y);  // mostra 5
+
+```
+
+
+|   ["Propriedades de objetos são basicamente as mesmas que variáveis normais em JavaScript, exceto pelo fato de estarem ligadas a objetos"](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Working_with_objects). Propriedades podem ser acessadas por colchetes, *[...]*.
+
+
+|   Assim, um objeto pode ser encarado como um *"pacote"* contendo nome, conteúdo e ferramentas próprias. Virtualmente, tudo em *JavaScript* — arrays, funções, strings, números — é, de alguma forma, um objeto com suas propriedades e métodos. Segue um exemplo:
+\
+
+```{.javascript}
+const carro = {
+  marca: "Toyota",        // propriedade (dado)
+  ano: 2022,              // propriedade
+  ligar: function() {     // método (ação)
+    console.log("O carro está ligado!");
+  }
+};
+
+carro.ligar();            // chama o método
+console.log(carro.marca); // acessa a propriedade
+
+```
+\
+
+|   A tabela abaixo interpreta o exemplo *"automobilístico"*:
+
+```{r}
+#| label: tbl-objetos-js
+#| tbl-cap: "Objetos, propriedades e métodos (JS)"
+#| echo: false
+
+df <- data.frame(
+  Conceito = c("Objeto", "Propriedade", "Método"),
+  `O que é` = c(
+    "Coleção de propriedades e métodos",
+    "Dado do objeto",
+    "Função que o objeto pode executar"
+  ),
+  Exemplo = c(
+    '{marca:"Toyota", ligar(){}}',
+    "carro.marca",
+    "carro.ligar()"
+  ),
+  check.names = FALSE
+)
+
+knitr::kable(df, align = c("l","l","l"))
+```
+\
+
+
+|   Reforçando (não custa nada...), um objeto *JavaScript* envolve uma coleção de propriedades, onde cada propriedade é definida por um par chave-valor, permitindo uma representação ordenada de elementos. Objetos podem conter diferentes tipos de dados como valores, como números, strings, booleanos, arrays, outras funções e até mesmo outros objetos. Objetos criados são facilmente acessados por seus atributos. Seguem exemplos e *JSPlotly* customizado para testes.
+
+
+#### Criação
+
+```{r, eval=FALSE}
+const pessoa = {
+    nome: 'João',
+    idade: 30,
+    cidade: 'São Paulo'
+};
+```
+
+#### Acesso
+
+```{r, eval=FALSE}
+print(pessoa.nome);
+print(pessoa['idade']);
+```
+
+#### Atributos
+
+```{r, eval=FALSE}
+pessoa.profissao = 'Engenheiro';
+print(pessoa);
+```
+
+|   Para um exemplo fechado de objetos:
+
+```{.javascript}
+let pessoa = {
+  nome: "João",
+  idade: 30,
+  profissao: "Desenvolvedor",
+  hobbies: ["leitura", "música", "jogos"],
+  endereco: {
+    rua: "Rua Principal, 123",
+    cidade: "São Paulo",
+  },
+  saudacao: function () {
+    print("Olá, meu nome é " + this.nome);
+  },
+};
+
+print(pessoa.nome); // Saída: "João"
+print(pessoa.hobbies[0]); // Saída: "leitura"
+pessoa.saudacao(); // Saída: "Olá, meu nome é João"
+```
+\
+
+
+```{=html}
+<div style="margin:1rem 0; padding-right:16px;">
+  <iframe src="apps/JSPlotly_treinoJS.html"
+          width="100%" height="760"
+          style="border:0;border-radius:10px;"></iframe>
+</div>
+```
+
+
+
+### E dá-lhe código padrão !!!
+
+|   Nesse sentido, nosso bom e velho código padrão do *JSPlotly* também apresenta objetos, propriedades e métodos. Veja o aplicativo *vivo* e compare seus códigos com o *chunk* que segue:
+\
+
+
+```{=html}
+<div style="margin:1rem 0; padding-right:16px;">
+  <iframe src="apps/JSPlotly2q.html"
+          width="100%" height="760"
+          style="border:0;border-radius:10px;"></iframe>
+</div>
+```
+\
+
+```{.javascript}
+// Objeto: Quadratica (propriedades a,b,c e metodos y(x), gerarDados)
+const Quadratica = {
+  a: -0.2,
+  b: 2.5,
+  c: 0.5,
+  y(x){ return this.a*x*x + this.b*x + this.c; },     // metodo
+  gerarDados(xmax=20, passo=0.5){                      // metodo
+    const x = [], y = [];
+    for(let i=0; i<=xmax; i+=passo){ x.push(i); y.push(this.y(i)); }
+    return { x, y };
+  }
+};
+
+// Usa os metodos do objeto para produzir os dados do grafico
+const { x, y } = Quadratica.gerarDados(20, 0.5);
+
+// Propriedades do "modelo de gráfico" que o JSPlotly espera
+const x_range = [0, 15];
+const y_range = [0, Math.max(...y)];
+const x_label = "Valores de X";
+const y_label = "Valores de Y";
+const title   = "Funcao Quadratica";
+
+// Retorno padrão do codigo
+return { x_values: x, y_values: y, x_range, y_range, x_label, y_label, title };
+
+```
+

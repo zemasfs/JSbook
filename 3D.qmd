@@ -1,0 +1,352 @@
+---
+title: "Gráficos 3D"
+---
+
+## Gráficos 3D
+
+|   Existem alguns tipos de gráficos tridimensionais, sendo os de dispersão (*scatter3D*) e de superfície (*surface*) os mais comuns. Seguem exemplos simples.
+
+### Dispersão {.unnumbered}
+
+```{r, eval=FALSE}
+const dados3D = [{
+    x: [1, 2, 3], y: [4, 5, 6], z: [7, 8, 9],
+    type: 'scatter3d', mode: 'markers'
+}];
+Plotly.newPlot('dispersao3D', dados3D);
+```
+
+
+:::{#fig-dispersao3D}
+```{=html}
+
+<!DOCTYPE html> 
+<html lang="pt"> 
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
+
+<body>
+    <div id="dispersao3D"></div> 
+
+    <script>
+
+const dados3D = [{
+    x: [1, 2, 3], y: [4, 5, 6], z: [7, 8, 9],
+    type: 'scatter3d', mode: 'markers'
+}];
+Plotly.newPlot('dispersao3D', dados3D);
+
+    </script>
+
+</body>
+</html>
+
+```
+Um exemplo de gráfico de dispersão em 3D com `Plotly.js`.
+:::
+
+### Superfície {.unnumbered}
+
+```{r, eval=FALSE}
+// Definindo os valores para os eixos x e y
+const x_valores = [1, 2, 3];
+const y_valores = [4, 5, 6];
+
+// Criando uma matriz 2D para os valores z
+// Cada linha representa valores de z para um valor de x constante
+const z_valores = [
+  [7, 8, 9],    // z valores para x=1
+  [10, -7, 12], // z valores para x=2
+  [13, 14, 15]  // z valores para x=3
+];
+
+// Configurando o gráfico de superfície
+const dados3Db = [{
+  x: x_valores,
+  y: y_valores,
+  z: z_valores,
+  type: 'surface',
+  colorscale: 'Viridis'
+}];
+
+// Layout para melhorar a visualização
+const layout = {
+  title: 'Gráfico de Superfície 3D',
+  scene: {
+    xaxis: {title: 'Eixo X'},
+    yaxis: {title: 'Eixo Y'},
+    zaxis: {title: 'Eixo Z'}
+  }
+};
+
+// Criando o gráfico
+Plotly.newPlot('superficie3D', dados3Db, layout);
+```
+
+:::{#fig-superficie3D}
+```{=html}
+<!DOCTYPE html> 
+<html lang="pt"> 
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
+
+<body>
+    <div id="superficie3D"></div> 
+
+    <script>
+
+// Definindo os valores para os eixos x e y
+const x_valores = [1, 2, 3];
+const y_valores = [4, 5, 6];
+
+// Criando uma matriz 2D para os valores z
+// Cada linha representa valores de z para um valor de x constante
+const z_valores = [
+  [7, 8, 9],    // z valores para x=1
+  [10, -7, 12], // z valores para x=2
+  [13, 14, 15]  // z valores para x=3
+];
+
+// Configurando o gráfico de superfície
+const dados3Db = [{
+  x: x_valores,
+  y: y_valores,
+  z: z_valores,
+  type: 'surface',
+  colorscale: 'Viridis'
+}];
+
+// Layout para melhorar a visualização
+const layout = {
+  title: 'Gráfico de Superfície 3D',
+  scene: {
+    xaxis: {title: 'Eixo X'},
+    yaxis: {title: 'Eixo Y'},
+    zaxis: {title: 'Eixo Z'}
+  }
+};
+
+// Criando o gráfico
+Plotly.newPlot('superficie3D', dados3Db, layout);
+
+    </script>
+
+</body>
+</html>
+```
+Um exemplo de gráfico 3D de superfície com `Plotly.js`.
+:::
+
+## Um exemplo completo
+
+|   Apenas como ilustração, segue um exemplo detalhado de configurações para um gráfico `Plotly.js`.
+
+```{r, eval=FALSE}
+// Criar um conjunto de pontos genérico
+const x_values = Array.from({ length: 100 }, (_, i) => i * 0.1);
+// Cria um array 'x_values' com 100 elementos, variando de 0 a 9.9 (0.1 * 99).
+
+const y_values = x_values.map(x => Math.sin(x) * Math.exp(-0.1 * x));
+// Cria um array 'y_values' aplicando a função sen(x) * e^(-0.1x) a cada elemento de 'x_values'.
+
+// Criar traço para o gráfico
+const trace = {
+    x: x_values,
+    y: y_values,
+    type: 'scatter',
+    mode: 'lines+markers', // Linhas + Pontos
+    line: { color: 'blue', width: 3, dash: 'dot' }, // Cor azul, linha pontilhada
+    marker: { size: 8, symbol: 'circle', color: 'red' }, // Personalização dos pontos
+    name: 'Função Exemplo'
+};
+// Define um objeto 'trace' que representa os dados a serem plotados no gráfico.
+// 'x' e 'y' contêm os dados, 'type' define o tipo de gráfico (scatter),
+// 'mode' especifica que linhas e pontos devem ser exibidos,
+// 'line' e 'marker' personalizam a aparência das linhas e pontos,
+// e 'name' define o nome da série de dados.
+
+// *Definir layout com várias personalizações*
+const layout = {
+    title: {
+        text: 'Gráfico Personalizado no Plotly',
+        font: { size: 20, family: 'Arial, sans-serif', color: 'black' }
+    },
+    // Define o título do gráfico e sua formatação.
+    xaxis: {
+        title: 'Eixo X - Tempo (s)',
+        titlefont: { size: 16, color: 'black' },
+        range: [0, 10], // Definir limites do eixo X
+        showgrid: true, // Exibir grade
+        gridcolor: 'lightgray',
+        zeroline: true, // Exibir linha do zero
+        zerolinecolor: 'black',
+        tickmode: 'linear', // Modo linear para ticks
+        tick0: 0,
+        dtick: 1, // Intervalo entre ticks
+        showline: true, // Exibir linha do eixo
+        linewidth: 2,
+        linecolor: 'black'
+    },
+    // Personaliza o eixo X: título, limites, grade, linha do zero, ticks e linha do eixo.
+    yaxis: {
+        title: 'Eixo Y - Amplitude',
+        titlefont: { size: 16, color: 'black' },
+        range: [-1, 1], // Definir limites do eixo Y
+        showgrid: true,
+        gridcolor: 'lightgray',
+        zeroline: true,
+        zerolinecolor: 'black',
+        tickmode: 'linear',
+        tick0: -1,
+        dtick: 0.2,
+        showline: true,
+        linewidth: 2,
+        linecolor: 'black'
+    },
+    // Personaliza o eixo Y de forma semelhante ao eixo X.
+    legend: {
+        x: 0.8,
+        y: 1.1,
+        bgcolor: 'rgba(255, 255, 255, 0.5)', // Fundo da legenda semi-transparente
+        bordercolor: 'black',
+        borderwidth: 1,
+        font: { size: 14, color: 'black' }
+    },
+    // Personaliza a legenda: posição, fundo, borda e fonte.
+    annotations: [
+        {
+            x: 5,
+            y: 0.5,
+            xref: 'x',
+            yref: 'y',
+            text: 'Ponto de Interesse',
+            showarrow: true,
+            arrowhead: 4,
+            ax: -40,
+            ay: -40,
+            font: { size: 14, color: 'black' }
+        }
+    ],
+    // Adiciona uma anotação ao gráfico: texto, posição, seta e formatação.
+    margin: { l: 50, r: 50, t: 50, b: 50 }, // Margens personalizadas
+    plot_bgcolor: 'rgba(240,240,240,0.5)', // Fundo do gráfico semi-transparente
+    paper_bgcolor: 'white' // Fundo da área total branca
+};
+// Define margens e cores de fundo do gráfico e da área total.
+
+// *Gerar o gráfico no Plotly*
+Plotly.newPlot('plot10', [trace], layout);
+```
+
+
+:::{#fig-completo}
+```{=html}
+<!DOCTYPE html> 
+<html> 
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
+
+<body>
+    <div id="plot10"></div> 
+
+    <script>
+
+// Criar um conjunto de pontos genérico
+const x_values = Array.from({ length: 100 }, (_, i) => i * 0.1);
+// Cria um array 'x_values' com 100 elementos, variando de 0 a 9.9 (0.1 * 99).
+
+const y_values = x_values.map(x => Math.sin(x) * Math.exp(-0.1 * x));
+// Cria um array 'y_values' aplicando a função sen(x) * e^(-0.1x) a cada elemento de 'x_values'.
+
+// Criar traço para o gráfico
+const trace = {
+    x: x_values,
+    y: y_values,
+    type: 'scatter',
+    mode: 'lines+markers', // Linhas + Pontos
+    line: { color: 'blue', width: 3, dash: 'dot' }, // Cor azul, linha pontilhada
+    marker: { size: 8, symbol: 'circle', color: 'red' }, // Personalização dos pontos
+    name: 'Função Exemplo'
+};
+// Define um objeto 'trace' que representa os dados a serem plotados no gráfico.
+// 'x' e 'y' contêm os dados, 'type' define o tipo de gráfico (scatter),
+// 'mode' especifica que linhas e pontos devem ser exibidos,
+// 'line' e 'marker' personalizam a aparência das linhas e pontos,
+// e 'name' define o nome da série de dados.
+
+// **Definir layout com várias personalizações**
+const layout = {
+    title: {
+        text: 'Gráfico Personalizado no Plotly',
+        font: { size: 20, family: 'Arial, sans-serif', color: 'black' }
+    },
+    // Define o título do gráfico e sua formatação.
+    xaxis: {
+        title: 'Eixo X - Tempo (s)',
+        titlefont: { size: 16, color: 'black' },
+        range: [0, 10], // Definir limites do eixo X
+        showgrid: true, // Exibir grade
+        gridcolor: 'lightgray',
+        zeroline: true, // Exibir linha do zero
+        zerolinecolor: 'black',
+        tickmode: 'linear', // Modo linear para ticks
+        tick0: 0,
+        dtick: 1, // Intervalo entre ticks
+        showline: true, // Exibir linha do eixo
+        linewidth: 2,
+        linecolor: 'black'
+    },
+    // Personaliza o eixo X: título, limites, grade, linha do zero, ticks e linha do eixo.
+    yaxis: {
+        title: 'Eixo Y - Amplitude',
+        titlefont: { size: 16, color: 'black' },
+        range: [-1, 1], // Definir limites do eixo Y
+        showgrid: true,
+        gridcolor: 'lightgray',
+        zeroline: true,
+        zerolinecolor: 'black',
+        tickmode: 'linear',
+        tick0: -1,
+        dtick: 0.2,
+        showline: true,
+        linewidth: 2,
+        linecolor: 'black'
+    },
+    // Personaliza o eixo Y de forma semelhante ao eixo X.
+    legend: {
+        x: 0.8,
+        y: 1.1,
+        bgcolor: 'rgba(255, 255, 255, 0.5)', // Fundo da legenda semi-transparente
+        bordercolor: 'black',
+        borderwidth: 1,
+        font: { size: 14, color: 'black' }
+    },
+    // Personaliza a legenda: posição, fundo, borda e fonte.
+    annotations: [
+        {
+            x: 5,
+            y: 0.5,
+            xref: 'x',
+            yref: 'y',
+            text: 'Ponto de Interesse',
+            showarrow: true,
+            arrowhead: 4,
+            ax: -40,
+            ay: -40,
+            font: { size: 14, color: 'black' }
+        }
+    ],
+    // Adiciona uma anotação ao gráfico: texto, posição, seta e formatação.
+    margin: { l: 50, r: 50, t: 50, b: 50 }, // Margens personalizadas
+    plot_bgcolor: 'rgba(240,240,240,0.5)', // Fundo do gráfico semi-transparente
+    paper_bgcolor: 'white' // Fundo da área total branca
+};
+// Define margens e cores de fundo do gráfico e da área total.
+
+// **Gerar o gráfico no Plotly**
+Plotly.newPlot('plot10', [trace], layout);
+
+    </script>
+
+</body>
+</html>
+```
+Um exemplo detalhado de produção de um gráfico com `Plotly.js`.
+:::

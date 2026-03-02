@@ -1,0 +1,154 @@
+---
+title: "Customização no Plotly"
+---
+
+# 📌 Tutorial Complementar: Plotly e Operações Matemáticas
+
+> **Objetivo:**  
+> - Aprender a sintaxe para operações matemáticas no **Plotly.js**.  
+> - Criar gráficos interativos **2D e 3D** com funções matemáticas.  
+> - Explorar **equações mais complexas** para simulação gráfica.  
+
+---
+
+## 📜 Sumário
+1. **Operações Matemáticas no Plotly.js**
+2. **Funções Comuns: Logaritmo, Exponencial, Raízes e Frações**
+3. **Criando um Gráfico 2D com uma Equação Complexa**
+4. **Introdução a Gráficos de Superfície 3D**
+5. **Exemplo Avançado: Superfície 3D de uma Função Matemática**
+
+---
+
+## 1️⃣ Operações Matemáticas no Plotly.js
+
+O **Plotly.js** utiliza **JavaScript**, que suporta operações matemáticas nativas. Aqui estão algumas das principais:
+
+| Operação      | Sintaxe JavaScript | Exemplo (y = f(x))  |
+|--------------|-------------------|--------------------|
+| Soma         | `a + b`           | `y = x + 2`       |
+| Subtração    | `a - b`           | `y = x - 3`       |
+| Multiplicação| `a * b`           | `y = x * 2`       |
+| Divisão      | `a / b`           | `y = x / 2`       |
+| Potência     | `Math.pow(a, b)`  | `y = Math.pow(x, 2)` |
+| Raiz quadrada| `Math.sqrt(x)`    | `y = Math.sqrt(x)` |
+| Logaritmo    | `Math.log(x)`     | `y = Math.log(x)` |
+| Exponencial  | `Math.exp(x)`     | `y = Math.exp(x)` |
+
+
+
+## 2️⃣ Exemplos de Funções Matemáticas
+
+### 📌 Exemplo 1: Funções Logarítmica, Exponencial e Quadrática
+```{r, eval=FALSE}
+var x_values = [...Array(100).keys()].map(i => i / 10); // x de 0 a 10
+
+var log_trace = {
+    x: x_values,
+    y: x_values.map(x => Math.log(x + 1)), // log(x + 1) para evitar log(0)
+    type: 'scatter',
+    mode: 'lines',
+    line: { color: 'red' },
+    name: 'log(x + 1)'
+};
+
+var exp_trace = {
+    x: x_values,
+    y: x_values.map(x => Math.exp(x / 3)), // e^(x/3)
+    type: 'scatter',
+    mode: 'lines',
+    line: { color: 'blue' },
+    name: 'exp(x/3)'
+};
+
+var quad_trace = {
+    x: x_values,
+    y: x_values.map(x => Math.pow(x, 2)), // x²
+    type: 'scatter',
+    mode: 'lines',
+    line: { color: 'green' },
+    name: 'x²'
+};
+
+Plotly.newPlot('grafico', [log_trace, exp_trace, quad_trace]);
+```
+
+---
+
+## 3️⃣ Criando um Gráfico 2D com uma Equação Complexa
+
+### 📌 Exemplo 2: Função Trigonométrica Modificada
+```{r, eval=FALSE}
+var x_values = [...Array(100).keys()].map(i => i / 10);
+
+var complex_trace = {
+    x: x_values,
+    y: x_values.map(x => Math.sin(x) * Math.exp(-x / 5) + 2),
+    type: 'scatter',
+    mode: 'lines',
+    line: { color: 'purple' },
+    name: 'sin(x) * e^(-x/5) + 2'
+};
+
+Plotly.newPlot('grafico', [complex_trace]);
+```
+
+---
+
+## 4️⃣ Introdução a Gráficos de Superfície 3D
+
+> **Gráficos de superfície 3D precisam de uma matriz de valores Z**, gerada a partir de **valores X e Y**.
+
+📌 **Exemplo 3: Superfície 3D - Função Seno**
+```{r, eval=FALSE}
+var x_values = [...Array(30).keys()].map(i => i - 15); // x de -15 a 15
+var y_values = [...Array(30).keys()].map(i => i - 15); // y de -15 a 15
+
+// Criar matriz de Z com f(x, y) = sen(sqrt(x² + y²))
+var z_values = x_values.map(x =>
+    y_values.map(y => Math.sin(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))))
+);
+
+var surface = {
+    x: x_values,
+    y: y_values,
+    z: z_values,
+    type: 'surface'
+};
+
+Plotly.newPlot('grafico3D', [surface]);
+```
+
+---
+
+## 5️⃣ Exemplo Avançado: Superfície 3D de uma Função Matemática
+
+### 📌 Exemplo 4: Superfície de Paraboloide Hiperbólico
+```{r, eval=FALSE}
+var x_values = [...Array(40).keys()].map(i => (i - 20) / 2);
+var y_values = [...Array(40).keys()].map(i => (i - 20) / 2);
+
+// Criar matriz de Z com f(x, y) = x² - y² (Paraboloide Hiperbólico)
+var z_values = x_values.map(x =>
+    y_values.map(y => Math.pow(x, 2) - Math.pow(y, 2))
+);
+
+var surface = {
+    x: x_values,
+    y: y_values,
+    z: z_values,
+    type: 'surface',
+    colorscale: 'Viridis' // Paleta de cores
+};
+
+Plotly.newPlot('grafico3D', [surface]);
+```
+
+---
+
+# 📌 Conclusão
+
+Agora você sabe como:  
+✅ **Usar operações matemáticas** no Plotly (log, exp, raiz, potência).  
+✅ **Criar gráficos 2D para simular equações complexas**.  
+✅ **Gerar gráficos de superfície 3D** para explorar equações avançadas.  

@@ -1,0 +1,241 @@
+---
+title: "Um pouco de estrutura JavaScript"
+format:
+  html:
+    page-layout: full
+    theme: zephyr   # pode trocar o tema à vontade
+    toc: true
+include-in-header:
+  - text: |
+      <style>
+      :root{
+        --lv-sidebar-w: 330px;
+        --lv-side-solid: #e8f0ff;  /* cor da sidebar */
+        --lv-main-solid: #f5f8fc;  /* <<< cor do CONTEÚDO */
+      }
+      /* use cores sólidas: */
+      #quarto-sidebar{ background: var(--lv-side-solid) !important; }
+      main.content,
+      #quarto-margin-sidebar{
+        background: var(--lv-main-solid) !important;
+      }
+      /* opcional: reduzir o espaço entre colunas */
+      #quarto-content.page-columns{ gap: 10px 16px; }
+      #quarto-sidebar{ width: var(--lv-sidebar-w); }
+      </style>
+
+  - text: |
+      <style>
+         /* ===== largura máxima do conteúdo ===== */
+        :root { --content-max-width: 1600px; }
+
+        /* ===== cores utilitárias (suas classes) ===== */
+        .red  { color: #e53935; }
+        .blue { color: dodgerblue; }
+        .green {color: green}
+        .darkblue  { color: #003366; }   /* azul escuro */
+        .darkgreen { color: #006400; }   /* verde escuro */
+        .orange    { color: #ff8c00; }   /* laranja */
+        .purple    { color: #800080; }   /* roxo */
+        .note { color:#6f42c1; background:#f3e8ff; padding:2px 6px; border-radius:6px; }
+       </style>
+
+---
+
+
+## Separação de comandos, inserção de comentários, e boas práticas
+
+|   Os comandos em *JS* são separados por *ponto e vírgula, ";"*.
+
+|   Já os *comentários* constituem trechos não interpretados, comumente utilizados em programação. Comentários são tremendamente úteis quando se deseja colocar um título no *script* de código, por exemplo, para explicar determinada ação, apontar uma futura melhoria, entre muitos. Em *JS* são alternativamente inseridos por *" // "* antes de cada comando, ou por *" /*....*/ "*, para comentários mais extensos. 
+
+
+|   Códigos em *JS* podem ser inseridos junto à páginas web (HTML) com seus comandos intercalados pela notação que segue (etiquetas ou *tags*:
+
+```{js}
+<script>  // abre para inserção
+
+...comandos JavaScript
+
+</script // fecha a inserção 
+```
+
+
+|   Uma característica interessante no *JS* é que tanto faz colocar ou não espaços entre os comandos, pois a linguagem não interpreta esses espaços. Contudo, dentro das *boas práticas em programação*, é aconselhável separar blocos de comandos por *identação* de 2 espaços, de modo a facilitar a leitura do código. 
+
+|   Outro cuidado que deve ser apreciado diz respeito a fonte maiúscula e minúscula. *JS* interpreta diferentemente termos em caixa alta ou baixa do teclado, então é bom se prestar atenção pra não incorrer em erro.
+
+## Declaração de variáveis
+
+|   Entre os diversos tipos de variáveis em *JS*, duas são frequentemente utilizadas: *const* e *let*. A variável *const* é utilizada para se atribuir um valor fixo a uma variável no código, enquanto a variável *let* é empregada quando se deseja reatribuir um valor a ela, por meio de algum cálculo ou laço iterativo. Exemplificando, quando se deseja variáveis de controle que mudam ao longo do tempo (sliders, passos, intervalos). 
+
+*Obs: * em versões antigas de *JS* é também empregado *var*, hoje em desuso.
+
+
+### "Botando a mão na massa" 
+
+| Como esse treinamento envolve instruir o algoritmo com uma *entrada* para que sua interpretação resulte numa *saída*, aqui propomos essa última pelo comando `print`, como segue. 
+
+
+```{js, eval=F}
+const a = -0.2;
+print(a)
+```
+
+
+|   Para esse treinamento utilizaremos o *JSPlotly* personalizado abaixo. Assim, teste  a atribuição da variável *const* e do comando `print` por cópia do trecho acima e cola no campo de texto *ÁREA PARA DIGITAR COMANDOS* do script que segue, seguido de *add*:
+\
+
+
+```{=html}
+<div style="margin:1rem 0; padding-right:16px;">
+  <iframe src="apps/JSPlotly_treinoJS.html"
+          width="100%" height="760"
+          style="border:0;border-radius:10px;"></iframe>
+</div>
+```
+
+
+|   Existem outros comandos de saída para *JS*, como `console.log()` e `document.body.appendChild()`, mas não utilizáveis pelo aplicativo.
+
+|   Pode-se atribuir também um texto para apresentar a constante, veja:
+\
+```{js, eval=F}
+const a = -0.2;
+print("constante:",a)
+```
+
+
+|   E também realizar cálculos diretos, veja:
+\
+```{js, eval=F}
+const a = 5; // variável constante (não se altera ao longo do código)
+const b = 10; // variável que pode alterar seu valor no código
+print(a*b)
+```
+
+|   Outro exemplo, com inserção de texto antes do resultado:
+
+
+```{js, eval=F}
+let a = 5;
+const b = 10;
+
+let resultado = a + b;
+print("Soma de a + b:", resultado);
+
+```
+\
+
+### *const* X *let* 
+
+|   Pode parecer que *const* e *let* são distintas apenas na aparência, já que operam de modo intercambiável. Contudo, para explicitar a diferença entre os dois comandos, apague o ecrã gráfico (*clean*) e substitua a linha de código da seção anterior pela que segue na *ÁREA PARA DIGITAR COMANDOS* do script:
+
+```{js, eval=F}
+let passo = 0.5;          // usuário pode alterar
+let x0 = 0;      // domínios dinâmicos
+print(passo, x0) 
+
+// ... mais tarde:
+passo = 0.2; x0 = 30;
+print(passo, x0)
+```
+
+|     Aparentemente, o resultado sugere que na prática nada muda, sendo a diferença mais centrada na clareza e segurança do código. Mas não é bem assim. Experimente agora trocar o campo pra executar o código abaixo:
+
+
+```{js eval=F}
+let contador = 0;
+contador += 1;
+print("Contador:", contador);
+```
+
+|   Agora substitua a variável do *"contador"* para *const* ao invés de *let*. O resultado incorrerá no erro abaixo:
+\
+
+![Erro gerado quando se substitui a variável *let* por *const* num trecho de reatribuição de valor.](figs/erroConst.png){#fig-erroConst}
+
+
+|   Resumindo: para constantes, use *const* e para variável reatribuível use *let*.
+
+
+
+## Tipos de dados
+
+|   Como é comum para outras linguagens, *JavaScript* possui alguns tipos comuns para definição de dados. Para uso de `Plotly.js`, são bem significativos:
+
+```{r, eval=FALSE}
+Number # número
+String # texto: representado entre aspas ( " " )
+Boolean # true/false ("branching")
+Object  # internos (built-in) ou externos (user-defined)
+Built-in # objects, arrays, dates, maps, etc
+```
+
+|   Seguem alguns exemplos práticos. Experimente trocar cada um na saída `print`:
+
+```{js, eval=F}
+// Numbers:
+let comprimento = 116;
+let peso = 75;
+
+// Strings:
+let color = "Yellow";
+let lastName = "Johnson";
+
+// Booleans
+let x = true;
+let y = false;
+
+// Object:
+const membro = {firstName:"John", lastName:"Doe"};
+
+// Array object:
+const carros = ["Saab", "Volvo", "BMW"];
+
+// Date object:
+    const datas = new Date("2022-03-25");
+
+// Saídas:
+print(comprimento)
+```
+
+
+## Constantes
+
+
+|   Por vezes é necessária a inserção de constantes matemáticas em equações para plotagem ou cálculos. Seguem alguns exemplos. Para a saída no *JSPlotly* customizado abaixo, basta o bom e velho `print` que segue ao também bom e velho *clean*.
+
+
+```{js, eval=F}
+Math.PI - valor de (pi), aproximadamente 3.14159
+Math.E - valor da constante de Euler, aproximadamente 2.71828
+Math.LN2 - logaritmo natural de 2, aproximadamente 0.693
+Math.LN10 - logaritmo natural de 10, aproximadamente 2.302
+Math.LOG2E - logaritmo de e na base 2, aproximadamente 1.442
+Math.LOG10E - logaritmo de e na base 10, aproximadamente 0.434
+Number.MAX_VALUE - maior número positivo
+Number.MIN_VALUE - menor número positivo...
+```
+
+```{=html}
+<div style="margin:1rem 0; padding-right:16px;">
+  <iframe src="apps/JSPlotly_treinoJS.html"
+          width="100%" height="760"
+          style="border:0;border-radius:10px;"></iframe>
+</div>
+```
+
+
+|   Para constantes naturais, contudo, é necessário defini-las antecipadamente, como em:
+
+```{js, eval=F}
+// Definindo constantes físico-químicas comuns
+const Avogadro = 6.02214076e23;  // Número de Avogadro (mol⁻¹)
+const Boltzmann = 1.380649e-23;  // Constante de Boltzmann (J/K)
+const Planck = 6.62607015e-34;   // Constante de Planck (J·s)
+const gas = 8.31446;    // Constante dos gases ideais (J/(mol·K))
+const luz = 299792458; // Velocidade da luz no vácuo (m/s)
+```
+
+

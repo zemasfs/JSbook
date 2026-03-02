@@ -1,0 +1,1145 @@
+---
+title: "Argumento *layout* "
+#engine: knitr
+format:
+  html:
+    self-contained: true
+    include-in-header:
+      text: |
+        <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+---
+
+|   Este capítulo é devotado ao emprego de comandos de `Plotly.js` e *JavaScript* na construção de gráficos interativos com a biblioteca. Para isso, pode-se utilizar o trecho de código visto na @sec-arquitet, para cópia/cola de comandos gráficos, salvando-o como arquivo HTML para visualização em navegador. Ou um mais simples ainda, veja:  
+
+```{js}
+<!DOCTYPE html> 
+<html> 
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
+
+<body>
+    <div id="ID-do-gráfico"></div> 
+
+    <script>
+
+<!--- AQUI VAI O CÓDIGO PLOTLY.JS --->
+
+Plotly.newPlot(ID-do-gráfico, ...)   // comando pro gráfico
+
+
+    </script>
+
+</body>
+</html>
+```
+
+
+
+|   A biblioteca `JSPlotly` permite a construção de mais de 40 tipos de gráficos. A construção do gráfico é realizada a partir de propriedades que definem diferentes aspectos de visualização dos dados. O tipo fundamental do gráfico é definido pela propriedade *type*, que cria o traço. exemplificando:
+
+
+```{r, eval=FALSE}
+# Propriedade `type`
+
+# Básicos
+scatter # dispersão, linhas, ou área
+bar  # barras
+pie  # pizza
+box  # diagramas de caixa (box plots)
+histogram  # histograma
+violin  # violino
+heatmap  # mapas de calor
+scatter3D  # dispersão em 3D
+choroplet # mapa cloroplético
+
+# Estatísticos
+contour # contorno
+histogram2d # histogramas bidimensionais
+histogram2dcontour #  contornos de histogramas 2D
+ohlc #  mercado financeiro (Open#High#Low#Close)
+candlestick #  velas (mercado financeiro)
+waterfall # cascata
+
+# 3D
+scatter3d # Para gráficos de dispersão 3D
+surface # Para superfícies 3D
+mesh3d # Para malhas 3D
+cone # Para gráficos de cone 3D
+streamtube # Para tubos de fluxo 3D
+
+# Mapa
+choropleth # Para mapas coropléticos (coloridos por região)
+scattergeo # Para mapas de dispersão geográficos
+scattermapbox # Para mapas usando Mapbox
+
+# Específicos
+sankey # diagramas de Sankey
+parcoords # coordenadas paralelas
+carpet # carpete
+funnel # funil
+funnelarea # área de funil
+treemap # mapas de árvore
+sunburst # explosão solar
+icicle # tipo "pingente de gelo"
+indicator # indicadores ou medidores
+table # tabelas
+```
+
+
+|   Além da propriedade de configuração *type*, acrescenta-se a propriedade *mode*, esta apenas para gráficos de dispersão de pontos (*scatter*). A propriedade *mode* acrescenta linhas, marcadores e/ou texto aos pontos gráficos, elevando seu grau de interatividade, e controlando a aparência dos pontos de dados:
+
+
+```{r, eval=FALSE}
+# Propriedade `mode` (somente para `type` - dispersão)
+
+markers - pontos/marcadores
+lines - linhas conectando os pontos
+text - texto para cada ponto
+markers+lines - marcadores e linhas
+markers+text - marcadores e texto para cada ponto
+lines+text - linhas e texto para cada ponto
+markers+lines+text - marcadores, linhas e texto
+```
+
+
+## Exemplos 
+
+|   Seguem exemplos que ilustram os tipos e modos gráficos da biblioteca. Para experimentá-los, basta usar o *container* HTML dado acima (simplificado), ou o presente na @sec-arquitet.
+
+
+```{js}
+
+# Um gráfico básico
+
+var trace = {
+  x: [1, 2, 3, 4, 5],
+  y: [2, 4, 1, 5, 3],
+  type: `scatter`,
+  };
+
+var data = [trace];
+
+Plotly.newPlot('plot', data)
+```
+
+
+
+:::  {#fig-basico}
+```{=html}
+
+<!DOCTYPE html> 
+<html> 
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
+
+<body>
+    <div id="plot"></div> 
+
+    <script>
+
+var trace = {
+  x: [1, 2, 3, 4, 5],
+  y: [2, 4, 1, 5, 3],
+  type: `scatter`,
+  };
+
+var data = [trace];
+
+Plotly.newPlot('plot', data)
+
+    </script>
+
+</body>
+</html>
+```
+Um gráfico de dispersão e linhas do comando padrão de `Plotly.js` ('scatter').
+:::
+
+|   Com uso da propriedade `scatter`, como visto acima, é possível alterar a configuração para visualização dos dados pela propriedade secundária `mode`. Segue um exemplo.
+
+
+```{js}
+
+# Configuração `mode`(em `scatter`)
+
+var trace = {
+  x: [1, 2, 3, 4, 5],
+  y: [2, 4, 1, 5, 3],
+  type: `scatter`,
+  mode: `markers`
+  };
+
+var data = [trace];
+
+Plotly.newPlot('plot1', data)
+```
+
+
+:::  {#fig-mode}
+```{=html}
+<!DOCTYPE html>
+<html>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<body>
+<div id="plot1" style="width:100%;max-width:700px"></div>
+
+<script>
+
+var trace = {
+  x: [1, 2, 3, 4, 5],
+  y: [2, 4, 1, 5, 3],
+  mode: `markers`,
+  type: `scatter`,
+};
+
+var data = [trace];
+
+Plotly.newPlot('plot1', data)
+
+</script>
+
+</body>
+</html>
+```
+
+O gráfico da figura anterior, alterado na configuração 'mode'.
+:::
+
+
+### Gráfico com mais de um conjunto de dados
+
+|   Autoexplicável no subtítulo, é caracterizado por uma representação múltipla de dados. Segue um exemplo.
+
+
+```{js}
+var trace1 = {
+  x: [0, 1, 2, 3, 4],
+  y: [1, 5, 3, 7, 5],
+  mode: 'lines+markers',
+  type: 'scatter',
+  name: 'linha 1'
+};
+
+var trace2 = {
+  x: [1, 2, 3, 4, 5],
+  y: [4, 0, 4, 6, 8],
+  mode: 'lines+markers',
+  type: 'scatter',
+  name: 'linha 2'
+};
+
+var data = [trace1, trace2];
+
+Plotly.newPlot('plot3', data)
+```
+
+
+
+:::{#fig-multiplo}
+```{=html}
+<!DOCTYPE html>
+<html>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<body>
+<div id="plot3" style="width:100%;max-width:700px"></div>
+
+<script>
+
+var trace1 = {
+  x: [0, 1, 2, 3, 4],
+  y: [1, 5, 3, 7, 5],
+  mode: 'lines+markers',
+  type: 'scatter',
+  name: 'linha 1'
+};
+
+var trace2 = {
+  x: [1, 2, 3, 4, 5],
+  y: [4, 0, 4, 6, 8],
+  mode: 'lines+markers',
+  type: 'scatter',
+  name: 'linha 2'
+};
+
+var data = [trace1, trace2];
+
+Plotly.newPlot('plot3', data)
+
+</script>
+
+</body>
+</html>
+```
+Um gráfico contendo mais de um conjunto de dados.
+:::
+
+## Subplot - figuras múltiplas
+
+|   Também é possível visualizar os dados dividindo-se o gráfico em *subplots* ou facetas. Ilustrando-se a partir do exemplo acima:
+
+
+```{js}
+
+var trace1 = {
+  x: [0, 1, 2, 3, 4],
+  y: [1, 5, 3, 7, 5],
+  mode: 'lines+markers',
+  type: 'scatter',
+  name: 'linha 1'
+};
+
+var trace2 = {
+  x: [1, 2, 3, 4, 5],
+  y: [4, 0, 4, 6, 8],
+  mode: 'lines+markers',
+  type: 'scatter',
+  name: 'linha 2'
+};
+
+// Layout para as facetas
+var layout = {
+  grid: {rows: 2, columns: 1, pattern: 'independent'},
+  height: 600,
+  title: 'Subplots',
+  showlegend: true
+};
+
+// Traços de cada subplot
+trace1.xaxis = 'x';
+trace1.yaxis = 'y';
+
+trace2.xaxis = 'x2';
+trace2.yaxis = 'y2';
+
+// dados configurados
+var data = [trace1, trace2];
+
+Plotly.newPlot('plot4', data, layout);
+```
+
+
+::: {#fig-subplots}
+```{=html}
+<!DOCTYPE html> 
+<html lang="pt"> 
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
+
+<body>
+    <div id="plot4"></div> 
+
+    <script>
+
+// Dados para os gráficos
+var trace1 = {
+  x: [0, 1, 2, 3, 4],
+  y: [1, 5, 3, 7, 5],
+  mode: 'lines+markers',
+  type: 'scatter',
+  name: 'linha 1'
+};
+
+var trace2 = {
+  x: [1, 2, 3, 4, 5],
+  y: [4, 0, 4, 6, 8],
+  mode: 'lines+markers',
+  type: 'scatter',
+  name: 'linha 2'
+};
+
+// Criando layout com subplots (facetas)
+var layout = {
+  grid: {rows: 2, columns: 1, pattern: 'independent'},
+  height: 600,
+  title: 'Gráficos em Facetas',
+  showlegend: true
+};
+
+// Configurando cada traço para seu respectivo subplot
+trace1.xaxis = 'x';
+trace1.yaxis = 'y';
+
+trace2.xaxis = 'x2';
+trace2.yaxis = 'y2';
+
+// Adicionando dados para os subplots
+var data = [trace1, trace2];
+
+// Criando o gráfico com facetas
+Plotly.newPlot('plot4', data, layout);
+
+    </script>
+
+</body>
+</html>
+```
+Exemplo de gráfico como subplots.
+:::
+
+
+## Personalização básica em `Plotly.js`
+
+
+|   Além das propriedades *type* e *mode*, um gráfico `Plotly.js` pode ser configurado para um conjunto extenso de argumentos, como rótulos nos eixos, cores, símbolos, marcas, plano de fundo, texto, fontes, e legendas, dentre vários. Abaixo um elenco ilustrado das possibilidades básicas, 
+
+
+```{r, eval=FALSE}
+
+# Plano de fundo
+    Cor
+    Grid
+    
+# Títulos (rótulos)
+    Fonte (tipo, tamanho)
+    Cor
+
+# Eixos
+   Etiquetas (rótulos)
+   Ticks 
+   Limites
+
+# Símbolos & Linhas
+   Tipos
+   Cores
+   Tamanho
+   Transparência
+   Preenchimento
+
+# Legendas
+  Inserção
+  Personalização
+
+# Anotações
+  Inserção
+  Personalização
+```
+
+
+|   Para ilustrar cada configuração de forma destacada, será utilizado um padrão de dados representativo, e repetido abaixo:
+
+
+
+```{js}
+var data = {
+  x: [1, 2, 3, 4, 5],
+  y: [2, 4, 1, 5, 3],
+  type: `scatter`,
+  };
+
+Plotly.newPlot('plot', data)
+```
+
+
+### Plano de fundo, cor, fonte, grid, rótulos (título, eixos)
+
+```{js}
+
+var data = [{
+  x: [1, 2, 3, 4, 5],
+  y: [2, 4, 1, 5, 3],
+  type: 'scatter',
+  mode: 'lines+markers', // Adiciona linhas e marcadores para melhor visualização
+  line: { color: 'blue' }, // Cor da linha
+  marker: { size: 8, color: 'red' } // Cor e tamanho dos marcadores
+}];
+
+var layout = {
+  title: {
+    text: 'Gráfico Exemplo', // Título do gráfico
+    font: {
+      family: 'Arial, sans-serif', // Tipo de fonte
+      size: 18, // Tamanho da fonte
+      color: 'darkblue' // Cor da fonte
+    }
+  },
+  xaxis: {
+    title: {
+      text: 'Eixo X',
+      font: {
+        family: 'Arial, sans-serif',
+        size: 14,
+        color: 'black'
+      }
+    },
+    showgrid: true, // Exibir grid
+    gridcolor: 'lightgray', // Cor do grid
+    zeroline: true, // Linha zero visível
+    zerolinecolor: 'gray' // Cor da linha zero
+  },
+  yaxis: {
+    title: {
+      text: 'Eixo Y',
+      font: {
+        family: 'Arial, sans-serif',
+        size: 14,
+        color: 'black'
+      }
+    },
+    showgrid: true,
+    gridcolor: 'lightgray',
+    zeroline: true,
+    zerolinecolor: 'gray'
+  },
+  plot_bgcolor: '#f5f5dc', // Cor de fundo do gráfico (bege claro)
+  paper_bgcolor: '#ffffff' // Cor de fundo da área do gráfico
+};
+
+Plotly.newPlot('plot5', data, layout);
+```
+
+
+::: {#fig-rotulos}
+```{=html}
+
+<!DOCTYPE html> 
+<html lang="pt"> 
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
+
+<body>
+    <div id="plot5"></div> 
+
+    <script>
+
+var data = [{
+  x: [1, 2, 3, 4, 5],
+  y: [2, 4, 1, 5, 3],
+  type: 'scatter',
+  mode: 'lines+markers', // Adiciona linhas e marcadores para melhor visualização
+  line: { color: 'blue' }, // Cor da linha
+  marker: { size: 8, color: 'red' } // Cor e tamanho dos marcadores
+}];
+
+var layout = {
+  title: {
+    text: 'Gráfico Exemplo', // Título do gráfico
+    font: {
+      family: 'Arial, sans-serif', // Tipo de fonte
+      size: 18, // Tamanho da fonte
+      color: 'darkblue' // Cor da fonte
+    }
+  },
+  xaxis: {
+    title: {
+      text: 'Eixo X',
+      font: {
+        family: 'Arial, sans-serif',
+        size: 14,
+        color: 'black'
+      }
+    },
+    showgrid: true, // Exibir grid
+    gridcolor: 'lightgray', // Cor do grid
+    zeroline: true, // Linha zero visível
+    zerolinecolor: 'gray' // Cor da linha zero
+  },
+  yaxis: {
+    title: {
+      text: 'Eixo Y',
+      font: {
+        family: 'Arial, sans-serif',
+        size: 14,
+        color: 'black'
+      }
+    },
+    showgrid: true,
+    gridcolor: 'lightgray',
+    zeroline: true,
+    zerolinecolor: 'gray'
+  },
+  plot_bgcolor: '#f5f5dc', // Cor de fundo do gráfico (bege claro)
+  paper_bgcolor: '#ffffff' // Cor de fundo da área do gráfico
+};
+
+Plotly.newPlot('plot5', data, layout);
+
+    </script>
+
+</body>
+</html>
+```
+Exemplo de gráfico com os dados básicos anteriores, mas com alterações em plano de fundo e rótulos.
+:::
+
+### Eixos - intervalos e limites
+
+```{js}
+
+var data = [{
+  x: [1, 2, 3, 4, 5],
+  y: [2, 4, 1, 5, 3],
+  type: 'scatter'
+}];
+
+var layout = {
+  xaxis: {
+    tickmode: 'linear',
+    tick0: 0.1,
+    dtick: 0.2, // Intervalo entre os ticks do eixo X
+    range: [2, 5] // Limites do eixo X
+  },
+  yaxis: {
+    tickmode: 'linear',
+    tick0: 0,
+    dtick: 0.5, // Intervalo entre os ticks do eixo Y
+    range: [1, 4] // Limites do eixo Y
+  }
+};
+
+Plotly.newPlot('plot6', data, layout);
+```
+
+
+::: {#fig-eixos}
+```{=html}
+
+<!DOCTYPE html>
+<html lang="pt">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<body>
+    <div id="plot6"></div>
+
+    <script>
+
+var data = [{
+  x: [1, 2, 3, 4, 5],
+  y: [2, 4, 1, 5, 3],
+  type: 'scatter'
+}];
+
+var layout = {
+  xaxis: {
+    tickmode: 'linear',
+    tick0: 0.1,
+    dtick: 0.2, // Intervalo entre os ticks do eixo X
+    range: [2, 5] // Limites do eixo X
+  },
+  yaxis: {
+    tickmode: 'linear',
+    tick0: 0,
+    dtick: 0.5, // Intervalo entre os ticks do eixo Y
+    range: [1, 4] // Limites do eixo Y
+  }
+};
+
+Plotly.newPlot('plot6', data, layout);
+
+    </script>
+
+</body>
+</html>
+```
+Um exemplo de configurações de eixos para `Plotly.js`.
+:::
+
+### Símbolos e linhas (tipo, cor, tamanho/espessura, transparência, preenchimento)
+
+```{js}
+
+var trace = {
+  x: [1, 2, 3, 4, 5],
+  y: [2, 4, 1, 5, 3],
+  type: 'scatter',
+  mode: 'lines+markers', // Adiciona tanto linhas quanto pontos
+  line: {
+    color: 'blue', // Cor da linha
+    width: 5, // Espessura da linha
+    dash: 'dashdot', // Tipo da linha (ex: solid, dash, dot, dashdot)
+  },
+  marker: {
+    color: 'red', // Cor dos marcadores
+    size: 15, // Tamanho dos marcadores
+    symbol: 'diamond', // Tipo de marcador (ex: 'circle', 'square', 'diamond', 'cross')
+    opacity: 0.3, // Transparência dos marcadores (0 totalmente transparente, 1 opaco)
+    line: {
+      color: 'black', // Cor do contorno do marcador
+      width: 2 // Espessura do contorno do marcador
+    }
+  }
+};
+
+
+Plotly.newPlot('plot7', [trace]);
+```
+
+
+:::  {#fig-simbLinhas}
+```{=html}
+
+<!DOCTYPE html>
+<html lang="pt">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<body>
+    <div id="plot7"></div>
+
+    <script>
+
+var trace = {
+  x: [1, 2, 3, 4, 5],
+  y: [2, 4, 1, 5, 3],
+  type: 'scatter',
+  mode: 'lines+markers', // Adiciona tanto linhas quanto pontos
+  line: {
+    color: 'blue', // Cor da linha
+    width: 5, // Espessura da linha
+    dash: 'dashdot', // Tipo da linha (ex: solid, dash, dot, dashdot)
+  },
+  marker: {
+    color: 'red', // Cor dos marcadores
+    size: 15, // Tamanho dos marcadores
+    symbol: 'diamond', // Tipo de marcador (ex: 'circle', 'square', 'diamond', 'cross')
+    opacity: 0.3, // Transparência dos marcadores (0 totalmente transparente, 1 opaco)
+    line: {
+      color: 'black', // Cor do contorno do marcador
+      width: 2 // Espessura do contorno do marcador
+    }
+  }
+};
+
+
+Plotly.newPlot('plot7', [trace]);
+
+    </script>
+
+</body>
+</html>
+```
+Represetação para configuração de símbolos e linhas.
+:::
+
+### Legenda (inserção e personalização)
+
+
+```{js}
+
+var trace = {
+  x: [1, 2, 3, 4, 5],
+  y: [2, 4, 1, 5, 3],
+  type: 'scatter',
+  mode: 'lines+markers', // Exibir pontos e linhas
+  name: 'Minha Série de Dados' // Nome que aparecerá na legenda
+};
+
+var data = [trace]; // Transformando em array
+
+var layout = {
+  title: 'Gráfico com Legenda',
+  showlegend: true,  // Certifica que a legenda será exibida
+  legend: {
+    x: 1, // Alinhado à direita
+    y: 1, // Alinhado no topo
+    font: {
+      family: 'Arial, sans-serif', // Fonte da legenda
+      size: 14, // Tamanho da fonte da legenda
+      color: 'darkblue' // Cor da fonte da legenda
+    },
+    bgcolor: 'rgba(255,255,255,0.7)', // Fundo semi-transparente
+    bordercolor: 'black', // Cor da borda
+    borderwidth: 1 // Espessura da borda
+  }
+};
+
+// Renderizar gráfico
+Plotly.newPlot('plot8', data, layout);
+```
+
+
+::: {#fig-legendas}
+```{=html}
+
+<!DOCTYPE html> 
+<html lang="pt"> 
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
+
+<body>
+    <div id="plot8"></div> 
+
+    <script>
+
+var trace = {
+  x: [1, 2, 3, 4, 5],
+  y: [2, 4, 1, 5, 3],
+  type: 'scatter',
+  mode: 'lines+markers', // Exibir pontos e linhas
+  name: 'Minha Série de Dados' // Nome que aparecerá na legenda
+};
+
+var data = [trace]; // Transformando em array
+
+var layout = {
+  title: 'Gráfico com Legenda',
+  showlegend: true,  // Certifica que a legenda será exibida
+  legend: {
+    x: 1, // Alinhado à direita
+    y: 1, // Alinhado no topo
+    font: {
+      family: 'Arial, sans-serif', // Fonte da legenda
+      size: 14, // Tamanho da fonte da legenda
+      color: 'darkblue' // Cor da fonte da legenda
+    },
+    bgcolor: 'rgba(255,255,255,0.7)', // Fundo semi-transparente
+    bordercolor: 'black', // Cor da borda
+    borderwidth: 1 // Espessura da borda
+  }
+};
+
+// Renderizar gráfico
+Plotly.newPlot('plot8', data, layout);
+
+
+
+
+    </script>
+
+</body>
+</html>
+
+```
+Exemplo de configuração para legendas do gráfico.
+:::
+
+### Anotações (inserção, setas, personalização)
+
+```{js}
+
+var trace = {
+  x: [1, 2, 3, 4, 5],
+  y: [2, 4, 1, 5, 3],
+  type: 'scatter',
+  mode: 'lines+markers',
+  name: 'Dados'
+};
+
+var data = [trace];
+
+var layout = {
+  title: 'Gráfico com Anotações',
+  annotations: [
+    {
+      x: 3, // Posição no eixo X
+      y: 1, // Posição no eixo Y
+      text: 'Ponto Mínimo', // Texto da anotação
+      showarrow: true, // Mostrar seta
+      arrowhead: 4, // Tipo da ponta da seta
+      ax: -40, // Posição do ponto da seta no eixo X (deslocamento)
+      ay: -30, // Posição do ponto da seta no eixo Y (deslocamento)
+      font: {
+        family: 'Arial, sans-serif',
+        size: 14,
+        color: 'red' // Cor do texto da anotação
+      },
+      arrowcolor: 'black', // Cor da seta
+      bgcolor: 'yellow', // Fundo da anotação
+      bordercolor: 'black', // Cor da borda do fundo
+      borderwidth: 1
+    },
+    {
+      x: 4, 
+      y: 5, 
+      text: 'Ponto Máximo', 
+      showarrow: true,
+      arrowhead: 2,
+      ax: 40,
+      ay: -40,
+      font: {
+        size: 14,
+        color: 'blue'
+      },
+      arrowcolor: 'blue',
+      bgcolor: 'lightgray'
+    }
+  ]
+};
+
+Plotly.newPlot('plot9', data, layout);
+```
+
+
+:::{#fig-anotas}
+```{=html}
+
+<!DOCTYPE html> 
+<html lang="pt"> 
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
+
+<body>
+    <div id="plot9"></div> 
+
+    <script>
+
+var trace = {
+  x: [1, 2, 3, 4, 5],
+  y: [2, 4, 1, 5, 3],
+  type: 'scatter',
+  mode: 'lines+markers',
+  name: 'Dados'
+};
+
+var data = [trace];
+
+var layout = {
+  title: 'Gráfico com Anotações',
+  annotations: [
+    {
+      x: 3, // Posição no eixo X
+      y: 1, // Posição no eixo Y
+      text: 'Ponto Mínimo', // Texto da anotação
+      showarrow: true, // Mostrar seta
+      arrowhead: 4, // Tipo da ponta da seta
+      ax: -40, // Posição do ponto da seta no eixo X (deslocamento)
+      ay: -30, // Posição do ponto da seta no eixo Y (deslocamento)
+      font: {
+        family: 'Arial, sans-serif',
+        size: 14,
+        color: 'red' // Cor do texto da anotação
+      },
+      arrowcolor: 'black', // Cor da seta
+      bgcolor: 'yellow', // Fundo da anotação
+      bordercolor: 'black', // Cor da borda do fundo
+      borderwidth: 1
+    },
+    {
+      x: 4, 
+      y: 5, 
+      text: 'Ponto Máximo', 
+      showarrow: true,
+      arrowhead: 2,
+      ax: 40,
+      ay: -40,
+      font: {
+        size: 14,
+        color: 'blue'
+      },
+      arrowcolor: 'blue',
+      bgcolor: 'lightgray'
+    }
+  ]
+};
+
+Plotly.newPlot('plot9', data, layout);
+
+    </script>
+
+</body>
+</html>
+```
+Representação de gráfico com inserção de anotações.
+:::
+
+
+
+## Um exemplo completo
+
+|   Apenas como ilustração, segue um exemplo detalhado de configurações para um gráfico `Plotly.js`.
+
+```{js}
+// Criar um conjunto de pontos genérico
+const x_values = Array.from({ length: 100 }, (_, i) => i * 0.1);
+// Cria um array 'x_values' com 100 elementos, variando de 0 a 9.9 (0.1 * 99).
+
+const y_values = x_values.map(x => Math.sin(x) * Math.exp(-0.1 * x));
+// Cria um array 'y_values' aplicando a função sen(x) * e^(-0.1x) a cada elemento de 'x_values'.
+
+// Criar traço para o gráfico
+const trace = {
+    x: x_values,
+    y: y_values,
+    type: 'scatter',
+    mode: 'lines+markers', // Linhas + Pontos
+    line: { color: 'blue', width: 3, dash: 'dot' }, // Cor azul, linha pontilhada
+    marker: { size: 8, symbol: 'circle', color: 'red' }, // Personalização dos pontos
+    name: 'Função Exemplo'
+};
+// Define um objeto 'trace' que representa os dados a serem plotados no gráfico.
+// 'x' e 'y' contêm os dados, 'type' define o tipo de gráfico (scatter),
+// 'mode' especifica que linhas e pontos devem ser exibidos,
+// 'line' e 'marker' personalizam a aparência das linhas e pontos,
+// e 'name' define o nome da série de dados.
+
+// *Definir layout com várias personalizações*
+const layout = {
+    title: {
+        text: 'Gráfico Personalizado no Plotly',
+        font: { size: 20, family: 'Arial, sans-serif', color: 'black' }
+    },
+    // Define o título do gráfico e sua formatação.
+    xaxis: {
+        title: 'Eixo X - Tempo (s)',
+        titlefont: { size: 16, color: 'black' },
+        range: [0, 10], // Definir limites do eixo X
+        showgrid: true, // Exibir grade
+        gridcolor: 'lightgray',
+        zeroline: true, // Exibir linha do zero
+        zerolinecolor: 'black',
+        tickmode: 'linear', // Modo linear para ticks
+        tick0: 0,
+        dtick: 1, // Intervalo entre ticks
+        showline: true, // Exibir linha do eixo
+        linewidth: 2,
+        linecolor: 'black'
+    },
+    // Personaliza o eixo X: título, limites, grade, linha do zero, ticks e linha do eixo.
+    yaxis: {
+        title: 'Eixo Y - Amplitude',
+        titlefont: { size: 16, color: 'black' },
+        range: [-1, 1], // Definir limites do eixo Y
+        showgrid: true,
+        gridcolor: 'lightgray',
+        zeroline: true,
+        zerolinecolor: 'black',
+        tickmode: 'linear',
+        tick0: -1,
+        dtick: 0.2,
+        showline: true,
+        linewidth: 2,
+        linecolor: 'black'
+    },
+    // Personaliza o eixo Y de forma semelhante ao eixo X.
+    legend: {
+        x: 0.8,
+        y: 1.1,
+        bgcolor: 'rgba(255, 255, 255, 0.5)', // Fundo da legenda semi-transparente
+        bordercolor: 'black',
+        borderwidth: 1,
+        font: { size: 14, color: 'black' }
+    },
+    // Personaliza a legenda: posição, fundo, borda e fonte.
+    annotations: [
+        {
+            x: 5,
+            y: 0.5,
+            xref: 'x',
+            yref: 'y',
+            text: 'Ponto de Interesse',
+            showarrow: true,
+            arrowhead: 4,
+            ax: -40,
+            ay: -40,
+            font: { size: 14, color: 'black' }
+        }
+    ],
+    // Adiciona uma anotação ao gráfico: texto, posição, seta e formatação.
+    margin: { l: 50, r: 50, t: 50, b: 50 }, // Margens personalizadas
+    plot_bgcolor: 'rgba(240,240,240,0.5)', // Fundo do gráfico semi-transparente
+    paper_bgcolor: 'white' // Fundo da área total branca
+};
+// Define margens e cores de fundo do gráfico e da área total.
+
+// *Gerar o gráfico no Plotly*
+Plotly.newPlot('plot10', [trace], layout);
+```
+
+
+:::{#fig-completo}
+```{=html}
+<!DOCTYPE html> 
+<html> 
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
+
+<body>
+    <div id="plot10"></div> 
+
+    <script>
+
+// Criar um conjunto de pontos genérico
+const x_values = Array.from({ length: 100 }, (_, i) => i * 0.1);
+// Cria um array 'x_values' com 100 elementos, variando de 0 a 9.9 (0.1 * 99).
+
+const y_values = x_values.map(x => Math.sin(x) * Math.exp(-0.1 * x));
+// Cria um array 'y_values' aplicando a função sen(x) * e^(-0.1x) a cada elemento de 'x_values'.
+
+// Criar traço para o gráfico
+const trace = {
+    x: x_values,
+    y: y_values,
+    type: 'scatter',
+    mode: 'lines+markers', // Linhas + Pontos
+    line: { color: 'blue', width: 3, dash: 'dot' }, // Cor azul, linha pontilhada
+    marker: { size: 8, symbol: 'circle', color: 'red' }, // Personalização dos pontos
+    name: 'Função Exemplo'
+};
+// Define um objeto 'trace' que representa os dados a serem plotados no gráfico.
+// 'x' e 'y' contêm os dados, 'type' define o tipo de gráfico (scatter),
+// 'mode' especifica que linhas e pontos devem ser exibidos,
+// 'line' e 'marker' personalizam a aparência das linhas e pontos,
+// e 'name' define o nome da série de dados.
+
+// **Definir layout com várias personalizações**
+const layout = {
+    title: {
+        text: 'Gráfico Personalizado no Plotly',
+        font: { size: 20, family: 'Arial, sans-serif', color: 'black' }
+    },
+    // Define o título do gráfico e sua formatação.
+    xaxis: {
+        title: 'Eixo X - Tempo (s)',
+        titlefont: { size: 16, color: 'black' },
+        range: [0, 10], // Definir limites do eixo X
+        showgrid: true, // Exibir grade
+        gridcolor: 'lightgray',
+        zeroline: true, // Exibir linha do zero
+        zerolinecolor: 'black',
+        tickmode: 'linear', // Modo linear para ticks
+        tick0: 0,
+        dtick: 1, // Intervalo entre ticks
+        showline: true, // Exibir linha do eixo
+        linewidth: 2,
+        linecolor: 'black'
+    },
+    // Personaliza o eixo X: título, limites, grade, linha do zero, ticks e linha do eixo.
+    yaxis: {
+        title: 'Eixo Y - Amplitude',
+        titlefont: { size: 16, color: 'black' },
+        range: [-1, 1], // Definir limites do eixo Y
+        showgrid: true,
+        gridcolor: 'lightgray',
+        zeroline: true,
+        zerolinecolor: 'black',
+        tickmode: 'linear',
+        tick0: -1,
+        dtick: 0.2,
+        showline: true,
+        linewidth: 2,
+        linecolor: 'black'
+    },
+    // Personaliza o eixo Y de forma semelhante ao eixo X.
+    legend: {
+        x: 0.8,
+        y: 1.1,
+        bgcolor: 'rgba(255, 255, 255, 0.5)', // Fundo da legenda semi-transparente
+        bordercolor: 'black',
+        borderwidth: 1,
+        font: { size: 14, color: 'black' }
+    },
+    // Personaliza a legenda: posição, fundo, borda e fonte.
+    annotations: [
+        {
+            x: 5,
+            y: 0.5,
+            xref: 'x',
+            yref: 'y',
+            text: 'Ponto de Interesse',
+            showarrow: true,
+            arrowhead: 4,
+            ax: -40,
+            ay: -40,
+            font: { size: 14, color: 'black' }
+        }
+    ],
+    // Adiciona uma anotação ao gráfico: texto, posição, seta e formatação.
+    margin: { l: 50, r: 50, t: 50, b: 50 }, // Margens personalizadas
+    plot_bgcolor: 'rgba(240,240,240,0.5)', // Fundo do gráfico semi-transparente
+    paper_bgcolor: 'white' // Fundo da área total branca
+};
+// Define margens e cores de fundo do gráfico e da área total.
+
+// **Gerar o gráfico no Plotly**
+Plotly.newPlot('plot10', [trace], layout);
+
+    </script>
+
+</body>
+</html>
+```
+Um exemplo detalhado de produção de um gráfico com `Plotly.js`.
+:::

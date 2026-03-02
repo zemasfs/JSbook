@@ -1,0 +1,469 @@
+---
+title: "Só mais um poquinho de...estrutura"
+format:
+  html:
+    page-layout: full
+    theme: zephyr   # pode trocar o tema à vontade
+    toc: true
+include-in-header:
+  - text: |
+      <style>
+      :root{
+        --lv-sidebar-w: 330px;
+        --lv-side-solid: #e8f0ff;  /* cor da sidebar */
+        --lv-main-solid: #f5f8fc;  /* <<< cor do CONTEÚDO */
+      }
+      /* use cores sólidas: */
+      #quarto-sidebar{ background: var(--lv-side-solid) !important; }
+      main.content,
+      #quarto-margin-sidebar{
+        background: var(--lv-main-solid) !important;
+      }
+      /* opcional: reduzir o espaço entre colunas */
+      #quarto-content.page-columns{ gap: 10px 16px; }
+      #quarto-sidebar{ width: var(--lv-sidebar-w); }
+      </style>
+
+  - text: |
+      <style>
+         /* ===== largura máxima do conteúdo ===== */
+        :root { --content-max-width: 1600px; }
+
+        /* ===== cores utilitárias (suas classes) ===== */
+        .red  { color: #e53935; }
+        .blue { color: dodgerblue; }
+        .green {color: green}
+        .darkblue  { color: #003366; }   /* azul escuro */
+        .darkgreen { color: #006400; }   /* verde escuro */
+      </style>
+---
+
+
+|   Seguindo nesse tutorial sobre *JavaScript* voltado ao uso do aplicativo *JSPlotly*, segue alguma informação sobre *variáveis*, *funções, geração de números aleatórios, e operadores de atribuição*.
+\
+
+## Variáveis...mais um pouco
+
+
+|   Dependendo da extensão de um código de programação (e isso não é só pra *JS*), é interessante definir o *escopo* de uma variável para atuar somente dentro de uma função (*variável local*), ao invés de atuar no código como um todo (*variável global*). De modo geral, um código mais extenso de de programação é estruturado em módulos, cada qual com um conjunto de funções e suas variáveis locais. Isso facilita a interpretação do código e evita erros advindos da interpretação de uma variável que deveria possuir atuação restrita a um bloco (*local*), mas que encontra-se disponível ao código todo (*global*).
+
+|   Por outro lado, também é frequente o uso de uma variável global quando se deseja que o código responda a um incremento de índice; algo como *"vá somando o índice "i" e rodando todo o código até atingir o valor "x"*. Nesse caso, é interessante utilizar-se uma *função aninhada* (*"nested function"*) denominada *closure* (função de fechamento). Essa função é identificada no código pela sintaxe abaixo:
+
+```{.javascript}
+
+const nome.funcao = (function () {
+// instruções
+}) ()
+```
+\
+
+|   O exemplo a seguir ilustra o emprego da *função aninhada de fechamento* direto no *JSPlotly*, e que pode ser testada no aplicativo na sequência.
+
+```{.javascript}
+
+const nome = {};
+nome.funcao = (function () {
+  let n = 0;            // estado privado
+  return function () {  // função interna captura "n"
+    n++;
+    return n;
+  };
+})();
+
+// Duas chamadas: resultado cresce por causa do estado privado
+const y = [nome.funcao(), nome.funcao()];  // [1, 2]
+
+// Plotzinho só para ver o efeito
+Plotly.newPlot("grafico", [{ x:[1,2], y, mode:"markers", name:"closure" }],
+               { title:"Closure mínimo" });
+
+```
+\
+
+```{=html}
+<div style="margin:1rem 0; padding-right:16px;">
+  <iframe src="apps/JSPlotly2q.html"
+          width="100%" height="760"
+          style="border:0;border-radius:10px;"></iframe>
+</div>
+```
+\
+
+## Funções
+
+|   Funções constituem um bloco de códigos para efetuar alguma ação. Em *JavaScript* uma função possui a seguinte sintaxe:
+
+```{.javascript}
+function nome(parâmetro1, parâmetro2, parâmetro3) {
+  // código para execução
+}
+```
+
+
+|   Seguem alguns exemplos de funções. O *JSPlotly* personalizado segue na sequência para testes.
+
+
+```{.javascript}
+function soma(a) { // define o nome e os "parâmetros" da função
+ return a + a // define os argumentos da função (no caso, a*a),
+            // pra retorna dos valores
+}
+
+// Teste
+let x = soma(7); // aplica parâmetros
+print(x) // saída da função
+```
+\
+
+
+*Obs: * O comando *return*, por vezes omitido, faz-se útil quando se deseja que o "retorno" seja concluído somente ao final do fluxo do script, sem resultados intermediários.
+
+
+```{.javascript}
+
+function expoente(a, b) { // define o nome e os "parâmetros" da função
+  return a ** b;  // define os argumentos da função (no caso, a^b),
+                  // pra retorna dos valores
+}
+
+// Teste da função
+let x = expoente(4, 3); // aplica parâmetros
+print(x);         // saída da função
+
+```
+\
+
+
+```{.javascript}
+function indexa(vetor){
+ return vetor + 1
+}
+
+var vetor = [1, 2, 3, 4, 5];
+print(indexa(vetor))
+```
+\
+
+```{.javascript}
+function Celsius(Fahrenheit) {
+  return (5/9) * (Fahrenheit-32);
+}
+
+let conversao = Celsius(115);
+print(conversao)
+```
+\
+
+#### Funções de seta (*arrow functions*)
+
+|   Como visto anteriormente, uma notação alternativa é a função *arrow*, que abrevia a sintaxe de funções. Segue um exemplo:
+
+
+```{.javascript}
+const multiplica = (a, b) => a * b;
+print(multiplica(4, 6));
+```
+
+
+|   Use o JSPlotly abaixo para testar os *chunks* (trechos de código) acima.
+
+```{=html}
+<div style="margin:1rem 0; padding-right:16px;">
+  <iframe src="apps/JSPlotly_treinoJS.html"
+          width="100%" height="760"
+          style="border:0;border-radius:10px;"></iframe>
+</div>
+```
+\
+
+## Geração de números aleatórios
+
+|   Números aleatórios são fundamentais quando se deseja que um resultado dependa de um valor escolhido ao acaso, ou quando se deseja aplicar uma função matemática com variação *randômica*, por exemplo. Pode-se gerar números aleatórios a partir de zero, a um máximo, ou entre limites. Na verdade, a função *Math.random* da linguagem *JS* gera números pseudoaleatórios por um algoritmo determinístico. Seguem exemplos, seguido da moldura para testes no *JSPlotly*.
+
+
+```{.javascript}
+// Número entre 0 e 1
+
+let numeroAleatorio = Math.random();
+print(numeroAleatorio);
+```
+
+
+```{.javascript}
+// Número entre 0 e um valor máximo:
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
+print(getRandomInt(10)); // Gera um número entre 0 e 9
+```
+
+```{.javascript}
+// Entre um valor mínimo e um máximo
+
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+print(getRandomIntInclusive(1, 10)); // Gera um número entre 1 e 10
+```
+
+
+```{=html}
+<div style="margin:1rem 0; padding-right:16px;">
+  <iframe src="apps/JSPlotly_treinoJS.html"
+          width="100%" height="760"
+          style="border:0;border-radius:10px;"></iframe>
+</div>
+```
+\
+
+## Operadores de atribuição
+
+|   Bastante comuns em linguagens de programação, um operador de atribuição (*assignment operator*) permite a execução do fluxo do algoritmo por atribuição de valores, ou por premissa satisfeita à comparações. São frequentemente utilizados junto a *estruturas de controle*, discutidas no próximo capítulo. Em *JavaScript* os operadores mais comuns são dados abaixo.
+
+
+```{.javascript}
+1. = : a = b --> ex: a = b;
+2. += : a+- b --> ex: a = (a + b);
+3. -= : a-= b --> ex: a = (a - b);
+4. *= : a*= b --> ex: a = (a * b);
+5. /= : a/= b --> ex: a = (a / b);
+6. %= : a%= b --> ex: a = (a % b);
+7. **= : a **= b --> ex: a = (a ** b)
+```
+
+
+
+|   Seguem exemplos e aplicativo personalizado para testes logo depois:
+```{.javascript}
+## Objetos
+=  # ex: x = y
++= # ex: x += y; x = x +y - outros operadores (-, /, *, **, %)
+  
+  Ilustrando:
+
+// =  (atribui)
+let x = 5, y = 2;
+x = y;           // x = 2
+
+// +=  (soma e atribui) — idem para -=, *=, /=, **=, %=
+x = 5; y = 2;
+x += y;          // x = 7   (5 + 2)
+
+x = 5; y = 2;
+x -= y;          // x = 3
+
+x = 5; y = 2;
+x *= y;          // x = 10
+
+x = 5; y = 2;
+x /= y;          // x = 2.5
+
+x = 5; y = 2;
+x **= y;         // x = 25  (5^2)
+
+x = 5; y = 2;
+x %= y;          // x = 1   (resto de 5/2)
+
+```
+\
+
+```{.javascript}
+## Bitwise (bit a bit)
+
+&= # ex: x &= ; x = x & y
+&= # ex: x &= y 	x = x & y
+^= # ex: x ^= y 	x = x ^ y
+
+    Ilustrando:
+
+// vamos usar binário para visualizar: 13 = 0b1101, 11 = 0b1011
+let x = 13, y = 11;
+
+x &= y;          // 1101 & 1011 = 1001  => x = 9
+// (recomeçando)
+x = 13; x |= y;  // 1101 | 1011 = 1111  => x = 15
+x = 13; x ^= y;  // 1101 ^ 1011 = 0110  => x = 6
+
+x = 13; x <<= 1; // 1101 << 1  = 11010 => x = 26
+x = 13; x >>= 1; // 1101 >> 1  = 0110  => x = 6
+x = 13; x >>>=1; // 1101 >>> 1 = 0110  => x = 6  (difere de >> só p/ negativos)
+
+```
+\
+
+```{.javascript}
+## Lógicos (curto-circuito com atribuição)
+
+
+&&=  # ex:	x &&= y 	x = x && (x = y) - AND
+||=  # ex: x ||= y 	x = x || (x = y) - OR
+
+...Ou ainda...
+
+Equivalências corretas:
+x ||= y ≈ if (!x) x = y; (atribui só se x for falso)
+x &&= y ≈ if (x) x = y; (atribui só se x for verdadeiro)
+
+    Ilustrando:
+
+// ||=  (OR lógico com atribuição)
+let x = 0, y = 5;
+x ||= y;         // 0 é falso → x = 5
+
+x = 3; y = 0;
+x ||= y;         // 3 é verdadeiro → x continua 3
+
+x = ""; y = "ok";
+x ||= y;         // string vazia é falso → x = "ok"
+
+// &&=  (AND lógico com atribuição)
+x = 7; y = 9;
+x &&= y;         // 7 é verdadeiro → x = 9
+
+x = 0; y = 9;
+x &&= y;         // 0 é falso → x continua 0
+
+```
+\
+
+```{=html}
+<div style="margin:1rem 0; padding-right:16px;">
+  <iframe src="apps/JSPlotly_treinoJS.html"
+          width="100%" height="760"
+          style="border:0;border-radius:10px;"></iframe>
+</div>
+```
+
+
+## Operadores de comparação
+
+|   No mesmo caminho, *JS*, assim como outras linguagens, também conta com operadores de comparação, como segue.
+
+```{.javascript}
+
+=== : igualdade;
+!== : inequalidade;
+>   : maior que;
+<   : menor que;
+>=  : maior ou igual que;
+<=  : menor ou igual que
+```
+\
+
+|   Como dantes, alguns exemplos pra colar no *JSPlotly* adaptado na sequência.
+
+```{.javascript}
+// Valores de teste
+const a = 2;
+const b = 2;
+const c = "2";   // string
+
+// === (igualdade estrita: mesmo valor e **mesmo tipo**)
+print(a === b); // true   (2 e 2, ambos number)
+print(a === c); // false  (2 number vs "2" string)
+
+// !== (desigualdade estrita)
+print(a !== b); // false  (são iguais e do mesmo tipo)
+print(a !== c); // true   (valores "iguais" mas tipos diferentes)
+
+// > (maior que) / < (menor que) / >= (maior ou igual) / <= (menor ou igual)
+const x = 5, y = 8;
+
+print(x > y);   // false
+print(x < y);   // true
+print(x >= 5);  // true
+print(y <= 8);  // true
+
+// Observação com strings: comparação é lexicográfica (ordem alfabética)
+print("apple" < "banana"); // true
+print("2" > "15");         // true  ("2" vem depois de "1" como texto)
+print(Number("2") > Number("15")); // false (2 > 15 é falso como número)
+
+```
+\
+
+
+```{=html}
+<div style="margin:1rem 0; padding-right:16px;">
+  <iframe src="apps/JSPlotly_treinoJS.html"
+          width="100%" height="760"
+          style="border:0;border-radius:10px;"></iframe>
+</div>
+```
+
+
+## Operadores lógicos
+
+|   Também da *"lógica"* de qualquer linguagem, esses operadores atuam em lógica *booleana*, de verdadeiro ou falso. 
+
+
+```{.javascript}
+1. && : E ("AND");
+2. || : OU ("OR");
+3. !  : NÃO ("NOT")
+```
+
+
+|   Seguem exemplos or JSPlotly de treino logo em seguida.
+
+```{.javascript}
+// Valores básicos
+const T = true, F = false;
+
+// &&  (AND) — só dá true se ambos forem true
+print(T && T); // true
+print(T && F); // false
+print(F && T); // false
+print(F && F); // false
+
+// ||  (OR) — dá true se pelo menos um for true
+print(T || T); // true
+print(T || F); // true
+print(F || T); // true
+print(F || F); // false
+
+
+// !  (NOT) — inverte o valor lógico
+print(!true);  // false
+print(!false); // true
+
+// "!!" força conversão para boolean (verdadeiro/falso)
+print(!!"ok"); // true   (string não vazia é verdadeiro)
+print(!!"");   // false  (string vazia é falso)
+print(!!0);    // false  (0 é falso)
+print(!!42);   // true   (número != 0 é verdadeiro)
+
+
+let chamadas = 0;
+function conta(){ chamadas++; return true; }
+
+// AND: se o primeiro for false, o segundo não roda
+chamadas = 0;
+const r1 = false && conta();
+print(r1, chamadas); // false 0
+
+// OR: se o primeiro for true, o segundo não roda
+chamadas = 0;
+const r2 = true || conta();
+print(r2, chamadas); // true 0
+
+
+```
+\
+
+
+
+```{=html}
+<div style="margin:1rem 0; padding-right:16px;">
+  <iframe src="apps/JSPlotly_treinoJS.html"
+          width="100%" height="760"
+          style="border:0;border-radius:10px;"></iframe>
+</div>
+```
+
+

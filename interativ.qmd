@@ -1,0 +1,375 @@
+---
+title: "Interatividade"
+engine: knitr
+cache: true
+format:
+  html:
+    self-contained: true
+    include-in-header:
+      text: |
+        <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+---
+
+
+|   A execução de um gráfico `Plotly.js` exibe um conjunto padrão de interatividade por mouse junto ao usuário. Esse padrão, como observado por passagem de mouse na @fig-padrao, revela 13 ícones para interatividade básica na saída gráfica:
+
+
+```{r, eval=FALSE}
+1. Download plot as png;
+2. Zoom;
+3. Pan;
+4. Box Select;
+5. Lasso Select;
+6. Zoom in;
+7. Zoom out;
+8. Autoscale;
+9. Reset axes;
+10. Toggle spike lines;
+11. Show closest data on hover;
+12. Compare data on hover;
+13. Produced with Plotly (apenas logo).
+```
+
+
+|   Alguns são autoexplicativos, outros nem tanto. Mas a melhor maneira de compreendê-los é testá-los no próprio gráfico.
+
+|   Além disso, alguns eventos interativos são obtidos por simples ações de mouse diretamente no ecrã do gráfico:
+
+```{r, eval=FALSE}
+1. Zoom in # selecionar uma área do gráfico
+2. Zoom out # clique duplo no gráfico (reset)
+3. Zoom individual em eixos # clique num ponto qualquer do gráfico e 
+      # arraste horizontalmente (eixo X) ou verticalmente (eixo Y)
+4. Deslocamento individual de eixos # passe o mouse próximo dos valores 
+      # dos eixos, até surgir um ícone de "o---o" para arraste
+5. Apresentar/esconder séries (show/hide) # clique na legenda (para mais de
+      # uma série de dados)
+
+```
+
+
+## Outras opções de interatividade {#sec-interativ}
+
+|   Além da interatividade padrão que acompanha um gráfico em `Plotly.js` (@fig-padrao), diversas outras são passíveis de complementação frente à linguagem *JavaScript*. Isso pode conduzir-se pela inserção de códigos específicos do usuário, ou pela inserção de funções pré-definidas na biblioteca. Tangente às últimas, algumas ações de interatividade são introduzidas por comandos simples junto à linha de interpretação do gráfico (*Plotly.newPlot*) ou ao *argumento config* do código, como observada na @sec-arquitet. Em ambos os casos, utilizam-se valores *booleanos*, *true/false* (mostrar/não mostrar). Exemplificam-se:
+
+
+```{r, eval=FALSE}
+    responsive               # ajuste responsivo (telas pequenas)
+    displaylogo              # remoção do logo Plotly
+    displayModeBar           # barra de ferramentas
+    editable                 # edição permitida nos rótulos (título e eixos)
+    scrollZoom               # zoom e scroll (uso do botão de rolagem do mouse)
+    staticPlot               # interatividade desabilitada
+    showTips                 # apresentação de dicas
+    showAxisDragHandles      # apresentação de alças de arraste
+    showSendToCloud          # envio à nuvem por botão
+    toImageButtonOptions     # exportação de imagem
+    displaylogo              # logo `Plotly`
+})
+```
+
+
+|   Eventos interativos adicionais podem envolver variações de *layout*, novos botões na barra de ferramentas (*ModeBar*), ou ações adicionais por linhas de comando, entre outros. Ilustrando, o trecho de código que segue, também chamado de *chunk*, apresenta a saída gráfica contendo interatividade adicional promovida por adicional promovida por modo alternativo de passagem de mouse (*hovermode*), e habilidade para editar os rótulos diretamente no gráfico de `Plotly.js` (título e eixos) .
+
+
+```{js, eval=FALSE}
+var trace = {
+  x: [0, 1, 2, 3, 4],
+  y: [1, 5, 3, 7, 5],
+  mode: 'lines+markers',
+  type: 'scatter',
+};
+
+var data = [trace];
+var layout = {
+  title: {
+      text: 'Clique para<br>editar os rótulos'
+  },
+  hovermode: 'closest' // alternativas: 'closest', 'x', 'y' ou 'compare'
+};
+
+Plotly.newPlot('editable', data, layout, {editable: true})
+```
+
+
+::: {#fig-editable .column-page layout-ncol=1}
+
+```{=html}
+<!DOCTYPE html>
+<html>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<body>
+<div id="editable" style="width:100%;max-width:700px"></div>
+
+<script>
+
+var trace = {
+  x: [0, 1, 2, 3, 4],
+  y: [1, 5, 3, 7, 5],
+  mode: 'lines+markers',
+  type: 'scatter',
+};
+
+var data = [trace];
+var layout = {
+  title: {
+      text: 'Clique para<br>editar os rótulos'
+  },
+  hovermode: 'closest' // Pode ser 'closest', 'x', 'y' ou 'compare'
+};
+
+Plotly.newPlot('editable', data, layout, {editable: true})
+
+</script>
+
+</body>
+</html>
+```
+
+Representação contendo título e eixos diretamente editáveis no ecrã.
+:::
+
+
+## Outras interações gráficas por comandos de usuário
+
+
+|   No oceano de interações flexíveis da biblioteca `JSPlotly`, agregam-se de forma virtualmente ilimitada, as alternativas de combinação de *layout* juntamente à *"escovação de bytes"* do usuário. Nesse sentido, seguem dois exemplos configuráveis da biblioteca.
+
+
+### Deslocamente panorâmico direto e salvamento como imagem vetorial
+
+|   O primeiro exemplo ilustra o deslocamento individual de eixos diretamente no gráfico (*pan*), bem como seu arquivamento como imagem vetorial *SVG* (e não a rasterizada PNG padrão) por ícone na barra de ferramentas.
+
+
+```{js}
+<!DOCTYPE html>
+<html>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<body>
+<div id="panSVG" style="width:100%;max-width:700px"></div>
+
+<script>
+
+var trace = {
+  x: [1, 2, 3, 4, 5],
+  y: [4, 0, 4, 6, 8],
+  mode: 'lines+markers',
+  type: 'scatter',
+  line: {color: 'red'}
+};
+
+var data = [trace];
+
+var layout = {
+  dragmode: 'pan', // Habilita a panorâmica (rolagem)
+};
+
+// Função personalizada para download como SVG
+function downloadAsSVG(gd) {
+  Plotly.downloadImage(gd, {
+    format: 'svg',
+    filename: 'grafico_plotly',
+    width: 800,
+    height: 600
+  });
+}
+
+var config = {
+  // formato de download com o botão camera da ModeBar (outros: JPEG, WebP, PDF, PNG-default)
+  toImageButtonOptions: {
+    format: 'svg', 
+    filename: 'grafico_plotly'
+  }
+};
+
+Plotly.newPlot('panSVG', data, layout, config);
+
+</script>
+
+</body>
+</html>
+```
+
+
+::: {#fig-panSVG}
+```{=html}
+<!DOCTYPE html>
+<html>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<body>
+<div id="panSVG" style="width:100%;max-width:700px"></div>
+
+<script>
+
+var trace = {
+  x: [1, 2, 3, 4, 5],
+  y: [4, 0, 4, 6, 8],
+  mode: 'lines+markers',
+  type: 'scatter',
+  line: {color: 'red'}
+};
+
+var data = [trace];
+
+var layout = {
+  dragmode: 'pan', // Habilita a panorâmica (rolagem)
+};
+
+// Função personalizada para download como SVG
+function downloadAsSVG(gd) {
+  Plotly.downloadImage(gd, {
+    format: 'svg',
+    filename: 'grafico_plotly',
+    width: 800,
+    height: 600
+  });
+}
+
+var config = {
+  // formato de download com o botão camera da ModeBar (outros: JPEG, WebP, PDF, PNG-default)
+  toImageButtonOptions: {
+    format: 'svg', 
+    filename: 'grafico_plotly'
+  }
+};
+
+Plotly.newPlot('panSVG', data, layout, config);
+
+</script>
+
+</body>
+</html>
+```
+Representação de gráfico para panorâmica (*pan*) direta por mouse, e salvamento de imagem como *SVG*.
+:::
+
+
+### Zoom direto por rolagem de mouse (*scroll*) e link para edição do gráfico em plataforma *online*
+
+
+|   O segundo exemplo busca ilustrar um efeito direto de *zoom* diretamente no gráfico usando-se o botão de rolagem do mouse, bem como um *link* para edição junto ao [Plotly Chart Studio](https://chart-studio.plotly.com/create/).
+
+
+```{js, eval=FALSE}
+<!DOCTYPE html>
+<html>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<body>
+<div id="grafico" style="width:100%;max-width:700px"></div>
+<script>
+var trace = {
+  x: [1, 2, 3, 4, 5],
+  y: [7, 1, 6, 2, 5],
+  mode: 'lines+markers',
+  type: 'scatter',
+  line: {color: 'green'}
+};
+var data = [trace];
+var layout = {}; // Objeto de layout vazio ou com outras configurações
+var config = {
+   showLink: true,
+  plotlyServerURL: "https://chart-studio.plotly.com",
+  scrollZoom: true}; // Configuração para habilitar o zoom com scroll
+
+Plotly.newPlot('grafico', data, layout, config);
+</script>
+</body>
+</html>
+```
+
+
+::: {#fig-scroll_editChart}
+```{=html}
+
+<!DOCTYPE html>
+<html>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<body>
+<div id="scroll_editChart" style="width:100%;max-width:700px"></div>
+<script>
+var trace = {
+  x: [1, 2, 3, 4, 5],
+  y: [7, 1, 6, 2, 5],
+  mode: 'lines+markers',
+  type: 'scatter',
+  line: {color: 'green'}
+};
+var data = [trace];
+var layout = {}; // Objeto de layout vazio ou com outras configurações
+var config = {
+   showLink: true,
+  plotlyServerURL: "https://chart-studio.plotly.com",
+  scrollZoom: true}; // habilita o zoom com scroll
+
+Plotly.newPlot('scroll_editChart', data, layout, config);
+</script>
+</body>
+</html>
+```
+Gráfico apresentando possibilidade de *zoom* diretamente no ecrã, bem como um link para edição no [Plotly Chart Studio](https://chart-studio.plotly.com/create/). Para efeito de *zoom*, basta posicionar o mouse no ecrã e usar seu botão de rolagem.
+:::
+
+
+
+## Plotly Chart Studio
+
+|   Como observado na seção acima, uma das possibilidades de interatividade extra envolve o uso de links e, tal como ilustrado, para o [Plotly Chart Studio](https://chart-studio.plotly.com/create/) (@fig-chartStudio), uma plataforma online que complementa a biblioteca `Plotly` de visualização de dados. O *Chart Studio* oferece um ambiente para criação, edição colaborativa, hospedagem, e compartilhamento de gráficos interativos.
+\
+
+![[Plotly Chart Studio](https://chart-studio.plotly.com/create/), uma plataforma pra construção, edição e compartilhamento de gráficos. `Plotly.js`.](chartStudio.png){#fig-chartStudio}
+
+|   Numa navegação rápida observa-se sua habilidade para manejo do gráfico sem a necessidade de uso de linhas de comando, o que pode ser bastante interessante,  complementar, ou mesmo confortavelmente aliviante ! Contudo, frisa-se que o uso de cliques de mouse para a criação de objetos técnicos-científicos esvazia as características desejadas de letramento digital e de programação almejadas neste decênio, e tangentes à reproducibilidade em Pesquisa e Educação.
+
+## Argumentos secundários
+
+|   Além dos *4 argumentos* principais utilizados na confecção de gráficos, `Plotly.js` utiliza facultativamente outros tantos. Complementarmente, também se somam opções avançadas de *layout*. Uma pequena amostra dessas possibilidades é elencada abaixo.
+
+
+
+```{js}
+
+# Argumentos secundários (objeto config):
+
+1. modeBarButtonsToRemove - Array com nomes de botões para remoção da barra de ferramentas (ex: {modeBarButtonsToRemove: ['pan2d', 'select2d']});
+2. modeBarButtonsToAdd - Array com botões personalizados para adição (ex:
+   {modeBarButtonsToAdd - [{name: 'botão personalizado', click: function() {}}]}
+3. locale: Configuração de idioma da interface ({locale: 'pt-BR'});
+4. doubleClick: resposta à clique duplo de mouse ('reset', 'autosize', 
+   false; ex: {doubleClick: 'reset'})
+   
+   
+# Opções complementares de layout:
+
+1. Subplots - gráficos múltiplos organizados em grade (ex:
+   {grid: {rows: 2, columns: 2, pattern: 'independent'}}
+2. updatemenus - Menus interativos para alternância entre visualizações (ex:
+   {updatemenus -  [{buttons: [{method: 'restyle', args: ['visible', 
+  [true, false]]}]}]}
+3. sliders -  Controles deslizantes (ex: {sliders: [{steps: [{method: 
+   'restyle', args: ['line.width', 1]}]}]}
+```
+
+
+|   E por fim, embora não à exaustão de possibilidades, alguns *eventos e métodos adicionais*, tais como:
+
+```{js}
+plotly_click - tratamento de dados por clique de mouse
+plotly_hover - passagem de mouse
+plotly_unhover - passagem sem efeito de mouse
+plotly_selected - seleção de área
+plotly_relayout - resposta dinâmica à qualquer alteração gráfica (zoom, inclusive)
+plotly.react() - atualização automática para novos dados
+plotly.purge() - remoção de gráfico
+plotly.toImage() - exportação do gráfico
+plotly.downloadImage() - exportação do gráfico
+Plotly.restyle() - aplicar novo estilo ao gráfico já interpretado
+plotly.animate() - produção de animação em frames
+
+```
+
+
+
+

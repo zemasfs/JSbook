@@ -1,0 +1,806 @@
+---
+title: "*Layout* avançado"
+engine: knitr
+format:
+  html:
+    self-contained: true
+    include-in-header:
+      text: |
+        <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+---
+
+
+Personalização de gráficos Plotly.js, organizadas por categorias. Cada característica é classificada como pertencente ao objeto `layout` ou `config`.
+
+## 1. Títulos (`layout`)
+
+| Propriedade | Descrição | Exemplo |
+|-------------|-----------|---------|
+| `title.text` | Define o texto do título principal | `title: { text: 'Análise de Vendas 2024' }` |
+| `title.font.family` | Define a família da fonte do título | `title: { font: { family: 'Arial, sans-serif' } }` |
+| `title.font.size` | Define o tamanho da fonte do título | `title: { font: { size: 24 } }` |
+| `title.font.color` | Define a cor da fonte do título | `title: { font: { color: '#1f77b4' } }` |
+| `title.xref` | Define a referência X para posicionamento do título | `title: { xref: 'paper' }` |
+| `title.x` | Define a posição horizontal do título (0-1) | `title: { x: 0.5 }` |
+| `title.yref` | Define a referência Y para posicionamento do título | `title: { yref: 'paper' }` |
+| `title.y` | Define a posição vertical do título (0-1) | `title: { y: 0.95 }` |
+
+## 2. Eixos (`layout`)
+
+| Propriedade | Descrição | Exemplo |
+|-------------|-----------|---------|
+| `xaxis.title.text` | Define o texto do título do eixo X | `xaxis: { title: { text: 'Tempo (s)' } }` |
+| `xaxis.title.font` | Define a fonte do título do eixo X | `xaxis: { title: { font: { family: 'Arial', size: 18, color: '#7f7f7f' } } }` |
+| `xaxis.range` | Define os limites do eixo X | `xaxis: { range: [0, 100] }` |
+| `xaxis.tickmode` | Define o modo de graduação (auto, linear, array) | `xaxis: { tickmode: 'linear' }` |
+| `xaxis.tick0` | Define a posição do primeiro rótulo quando tickmode='linear' | `xaxis: { tick0: 0 }` |
+| `xaxis.dtick` | Define o intervalo entre rótulos quando tickmode='linear' | `xaxis: { dtick: 10 }` |
+| `xaxis.tickvals` | Define posições personalizadas dos rótulos | `xaxis: { tickvals: [0, 25, 50, 75, 100] }` |
+| `xaxis.ticktext` | Define textos personalizados para os rótulos | `xaxis: { ticktext: ['Zero', '25%', '50%', '75%', 'Max'] }` |
+| `xaxis.showgrid` | Mostra/oculta as linhas de grade do eixo | `xaxis: { showgrid: true }` |
+| `xaxis.gridcolor` | Define a cor das linhas de grade | `xaxis: { gridcolor: '#e6e6e6' }` |
+| `xaxis.gridwidth` | Define a largura das linhas de grade | `xaxis: { gridwidth: 1 }` |
+
+## 3. Símbolos/Marcadores (`layout` - via `trace`)
+
+| Propriedade | Descrição | Exemplo |
+|-------------|-----------|---------|
+| `marker.symbol` | Define o tipo de símbolo/marcador | `marker: { symbol: 'circle' }` |
+| `marker.size` | Define o tamanho do marcador | `marker: { size: 12 }` |
+| `marker.color` | Define a cor do marcador | `marker: { color: 'rgb(255, 0, 0)' }` |
+| `marker.opacity` | Define a transparência do marcador (0-1) | `marker: { opacity: 0.8 }` |
+| `marker.line.color` | Define a cor da linha do marcador | `marker: { line: { color: 'black' } }` |
+| `marker.line.width` | Define a largura da linha do marcador | `marker: { line: { width: 2 } }` |
+| `marker.gradient` | Define um gradiente para os marcadores | `marker: { gradient: { type: 'radial', color: 'white' } }` |
+
+## 4. Linhas (`layout` - via `trace`)
+
+| Propriedade | Descrição | Exemplo |
+|-------------|-----------|---------|
+| `line.color` | Define a cor da linha | `line: { color: 'rgb(55, 128, 191)' }` |
+| `line.width` | Define a largura da linha | `line: { width: 3 }` |
+| `line.dash` | Define o estilo da linha (solid, dot, dash, etc.) | `line: { dash: 'dash' }` |
+| `line.shape` | Define a forma da linha (linear, spline, etc.) | `line: { shape: 'spline' }` |
+| `line.smoothing` | Define o nível de suavização para linhas | `line: { smoothing: 1.3 }` |
+
+## 5. Grid (`layout`)
+
+| Propriedade | Descrição | Exemplo |
+|-------------|-----------|---------|
+| `grid.rows` | Define o número de linhas no grid | `grid: { rows: 2 }` |
+| `grid.columns` | Define o número de colunas no grid | `grid: { columns: 3 }` |
+| `grid.pattern` | Define o padrão do grid | `grid: { pattern: 'independent' }` |
+| `grid.roworder` | Define a ordem das linhas | `grid: { roworder: 'top to bottom' }` |
+| `grid.xgap` | Define o espaçamento horizontal entre subplots | `grid: { xgap: 0.1 }` |
+| `grid.ygap` | Define o espaçamento vertical entre subplots | `grid: { ygap: 0.1 }` |
+
+## 6. Plano de Fundo (`layout`)
+
+| Propriedade | Descrição | Exemplo |
+|-------------|-----------|---------|
+| `paper_bgcolor` | Define a cor de fundo da área do papel | `paper_bgcolor: 'rgb(250, 250, 250)'` |
+| `plot_bgcolor` | Define a cor de fundo da área do gráfico | `plot_bgcolor: 'rgba(240, 240, 240, 0.8)'` |
+| `images` | Adiciona imagens de fundo ao gráfico | `images: [{ source: 'url', x: 0, y: 0, xref: 'paper', yref: 'paper', sizex: 1, sizey: 1 }]` |
+| `shapes` | Adiciona formas geométricas ao plano de fundo | `shapes: [{ type: 'rect', x0: 0, y0: 0, x1: 1, y1: 1, fillcolor: '#d3d3d3', opacity: 0.2 }]` |
+
+## 7. Texto (`layout` - via `trace`)
+
+| Propriedade | Descrição | Exemplo |
+|-------------|-----------|---------|
+| `text` | Define o texto a ser exibido para cada ponto | `text: ['A', 'B', 'C']` |
+| `textposition` | Define a posição do texto | `textposition: 'top center'` |
+| `textfont.family` | Define a família da fonte do texto | `textfont: { family: 'Arial' }` |
+| `textfont.size` | Define o tamanho da fonte do texto | `textfont: { size: 12 }` |
+| `textfont.color` | Define a cor da fonte do texto | `textfont: { color: 'blue' }` |
+| `hovertext` | Define o texto para hover | `hovertext: ['Info A', 'Info B', 'Info C']` |
+| `hoverinfo` | Define quais informações mostrar no hover | `hoverinfo: 'x+y+text'` |
+| `annotations` | Adiciona anotações ao gráfico | `annotations: [{ text: 'Ponto máximo', x: 5, y: 10, showarrow: true }]` |
+
+## 8. Configurações Gerais (`config`)
+
+| Propriedade | Descrição | Exemplo |
+|-------------|-----------|---------|
+| `displayModeBar` | Mostra/oculta a barra de ferramentas | `displayModeBar: true` |
+| `responsive` | Torna o gráfico responsivo | `responsive: true` |
+| `scrollZoom` | Permite zoom com rolagem do mouse | `scrollZoom: true` |
+| `showLink` | Mostra o link para o editor online | `showLink: false` |
+| `modeBarButtonsToRemove` | Remove botões específicos da barra | `modeBarButtonsToRemove: ['zoomIn2d', 'zoomOut2d']` |
+| `toImageButtonOptions` | Opções do botão para salvar imagem | `toImageButtonOptions: { format: 'png', filename: 'grafico' }` |
+| `doubleClick` | Define o comportamento do duplo clique | `doubleClick: 'reset+autosize'` |
+
+## Exemplos Práticos
+
+### Exemplo 1: Gráfico de Dispersão com Personalização Completa
+
+```javascript
+const data = [{
+  x: [1, 2, 3, 4, 5],
+  y: [10, 11, 12, 13, 14],
+  type: 'scatter',
+  mode: 'markers+lines+text',
+  text: ['A', 'B', 'C', 'D', 'E'],
+  textposition: 'top center',
+  textfont: {
+    family: 'Arial',
+    size: 12,
+    color: 'blue'
+  },
+  marker: {
+    symbol: 'circle',
+    size: 12,
+    color: 'rgb(255, 65, 54)',
+    opacity: 0.8,
+    line: {
+      color: 'black',
+      width: 1
+    }
+  },
+  line: {
+    color: 'rgb(55, 128, 191)',
+    width: 2,
+    dash: 'solid',
+    shape: 'spline'
+  }
+}];
+
+const layout = {
+  title: {
+    text: 'Gráfico de Dispersão Personalizado',
+    font: {
+      family: 'Arial, sans-serif',
+      size: 24,
+      color: '#1f77b4'
+    },
+    x: 0.5
+  },
+  xaxis: {
+    title: {
+      text: 'Valores X',
+      font: {
+        family: 'Arial',
+        size: 18,
+        color: '#7f7f7f'
+      }
+    },
+    range: [0, 6],
+    tickmode: 'linear',
+    tick0: 0,
+    dtick: 1,
+    showgrid: true,
+    gridcolor: '#e6e6e6',
+    gridwidth: 1
+  },
+  yaxis: {
+    title: {
+      text: 'Valores Y',
+      font: {
+        family: 'Arial',
+        size: 18,
+        color: '#7f7f7f'
+      }
+    },
+    range: [9, 15]
+  },
+  paper_bgcolor: 'rgb(250, 250, 250)',
+  plot_bgcolor: 'rgba(240, 240, 240, 0.8)',
+  annotations: [{
+    text: 'Valor máximo',
+    x: 5,
+    y: 14,
+    showarrow: true,
+    arrowhead: 2,
+    arrowcolor: '#636363',
+    arrowsize: 1,
+    arrowwidth: 2
+  }]
+};
+
+const config = {
+  responsive: true,
+  displayModeBar: true,
+  scrollZoom: true,
+  modeBarButtonsToRemove: ['zoomIn2d', 'zoomOut2d'],
+  toImageButtonOptions: {
+    format: 'png',
+    filename: 'grafico_dispersao',
+    height: 500,
+    width: 700,
+    scale: 2
+  }
+};
+
+Plotly.newPlot('myDiv', data, layout, config);
+```
+
+### Exemplo 2: Gráfico de Barras com Temas Personalizados
+
+```javascript
+const trace1 = {
+  x: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
+  y: [20, 14, 25, 16, 18],
+  type: 'bar',
+  text: ['20%', '14%', '25%', '16%', '18%'],
+  textposition: 'auto',
+  hoverinfo: 'x+y',
+  marker: {
+    color: 'rgba(58, 171, 201, 0.6)',
+    line: {
+      color: 'rgba(58, 171, 201, 1.0)',
+      width: 2
+    }
+  }
+};
+
+const data = [trace1];
+
+const layout = {
+  title: {
+    text: 'Vendas Mensais',
+    font: {
+      family: 'Roboto, sans-serif',
+      size: 24,
+      color: '#333'
+    },
+    x: 0.5
+  },
+  xaxis: {
+    title: {
+      text: 'Mês',
+      font: {
+        family: 'Roboto',
+        size: 16,
+        color: '#666'
+      }
+    },
+    tickangle: -45
+  },
+  yaxis: {
+    title: {
+      text: 'Vendas (%)',
+      font: {
+        family: 'Roboto',
+        size: 16,
+        color: '#666'
+      }
+    },
+    range: [0, 30],
+    ticksuffix: '%'
+  },
+  paper_bgcolor: '#f8f9fa',
+  plot_bgcolor: '#f8f9fa',
+  shapes: [{
+    type: 'line',
+    x0: -0.5,
+    y0: 20,
+    x1: 4.5,
+    y1: 20,
+    line: {
+      color: 'red',
+      width: 2,
+      dash: 'dash'
+    }
+  }],
+  annotations: [{
+    x: 2,
+    y: 22,
+    text: 'Meta (20%)',
+    showarrow: false,
+    font: {
+      color: 'red'
+    }
+  }]
+};
+
+const config = {
+  responsive: true,
+  displaylogo: false,
+  modeBarButtonsToRemove: ['autoScale2d', 'resetScale2d']
+};
+
+Plotly.newPlot('myDiv', data, layout, config);
+```
+
+### Exemplo 3: Gráfico de Linha com Múltiplas Séries
+
+```javascript
+const trace1 = {
+  x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+  y: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+  mode: 'lines+markers',
+  name: 'Linear',
+  line: {
+    color: 'rgb(55, 126, 184)',
+    width: 3,
+    dash: 'solid'
+  },
+  marker: {
+    symbol: 'circle',
+    size: 8,
+    color: 'rgb(55, 126, 184)',
+    line: {
+      color: 'white',
+      width: 1
+    }
+  }
+};
+
+const trace2 = {
+  x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+  y: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20],
+  mode: 'lines+markers',
+  name: 'Quadrático',
+  line: {
+    color: 'rgb(228, 26, 28)',
+    width: 3,
+    dash: 'dashdot'
+  },
+  marker: {
+    symbol: 'square',
+    size: 8,
+    color: 'rgb(228, 26, 28)',
+    line: {
+      color: 'white',
+      width: 1
+    }
+  }
+};
+
+const trace3 = {
+  x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+  y: [2, 8, 18, 32, 50, 72, 98, 128, 162, 200],
+  mode: 'lines+markers',
+  name: 'Exponencial',
+  line: {
+    color: 'rgb(77, 175, 74)',
+    width: 3,
+    dash: 'dot'
+  },
+  marker: {
+    symbol: 'diamond',
+    size: 8,
+    color: 'rgb(77, 175, 74)',
+    line: {
+      color: 'white',
+      width: 1
+    }
+  }
+};
+
+const data = [trace1, trace2, trace3];
+
+const layout = {
+  title: {
+    text: 'Comparação de Funções',
+    font: {
+      family: 'Open Sans, sans-serif',
+      size: 24,
+      color: '#333'
+    },
+    x: 0.5
+  },
+  xaxis: {
+    title: {
+      text: 'Valor de X',
+      font: {
+        family: 'Open Sans',
+        size: 16,
+        color: '#555'
+      }
+    },
+    showgrid: true,
+    gridcolor: '#ddd',
+    zeroline: true,
+    zerolinecolor: '#999',
+    zerolinewidth: 1
+  },
+  yaxis: {
+    title: {
+      text: 'Valor de Y',
+      font: {
+        family: 'Open Sans',
+        size: 16,
+        color: '#555'
+      }
+    },
+    showgrid: true,
+    gridcolor: '#ddd',
+    zeroline: true,
+    zerolinecolor: '#999',
+    zerolinewidth: 1
+  },
+  legend: {
+    x: 0.02,
+    y: 0.98,
+    bgcolor: 'rgba(255, 255, 255, 0.5)',
+    bordercolor: '#ddd',
+    borderwidth: 1
+  },
+  margin: {
+    l: 50,
+    r: 50,
+    b: 50,
+    t: 80,
+    pad: 4
+  },
+  paper_bgcolor: 'white',
+  plot_bgcolor: 'white',
+  hovermode: 'closest'
+};
+
+const config = {
+  responsive: true,
+  displayModeBar: true,
+  modeBarButtonsToAdd: ['v1hovermode', 'toggleSpikelines'],
+  scrollZoom: true
+};
+
+Plotly.newPlot('myDiv', data, layout, config);
+```
+
+### Exemplo 4: Gráfico de Pizza Personalizado
+
+```javascript
+const data = [{
+  values: [40, 25, 20, 10, 5],
+  labels: ['Produto A', 'Produto B', 'Produto C', 'Produto D', 'Produto E'],
+  type: 'pie',
+  textinfo: 'label+percent',
+  textposition: 'outside',
+  textfont: {
+    family: 'Lato, sans-serif',
+    size: 14,
+    color: '#000'
+  },
+  automargin: true,
+  marker: {
+    colors: ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f'],
+    line: {
+      color: 'white',
+      width: 2
+    }
+  },
+  pull: [0, 0.1, 0, 0, 0],
+  hole: 0.4,
+  hoverinfo: 'label+percent+value',
+  hoverlabel: {
+    bgcolor: '#FFF',
+    bordercolor: '#333',
+    font: {
+      family: 'Lato, sans-serif',
+      size: 12,
+      color: '#333'
+    }
+  }
+}];
+
+const layout = {
+  title: {
+    text: 'Distribuição de Vendas por Produto',
+    font: {
+      family: 'Lato, sans-serif',
+      size: 24,
+      color: '#333'
+    },
+    x: 0.5
+  },
+  annotations: [{
+    font: {
+      size: 16
+    },
+    showarrow: false,
+    text: 'Vendas<br>2024',
+    x: 0.5,
+    y: 0.5
+  }],
+  paper_bgcolor: 'rgba(250,250,250,0.7)',
+  height: 500,
+  width: 700,
+  showlegend: true,
+  legend: {
+    orientation: 'v',
+    x: 1,
+    y: 0.5,
+    xanchor: 'left'
+  }
+};
+
+const config = {
+  responsive: true,
+  displayModeBar: false,
+  toImageButtonOptions: {
+    format: 'png',
+    filename: 'grafico_pizza',
+    height: 500,
+    width: 700,
+    scale: 2
+  }
+};
+
+Plotly.newPlot('myDiv', data, layout, config);
+```
+
+### Exemplo 5: Gráfico de Calor (Heatmap) com Personalização
+
+```javascript
+const data = [{
+  z: [
+    [1, 20, 30, 50, 1],
+    [20, 1, 60, 80, 30],
+    [30, 60, 1, -10, 20],
+    [50, 80, -10, 1, 60],
+    [1, 30, 20, 60, 1]
+  ],
+  x: ['A', 'B', 'C', 'D', 'E'],
+  y: ['V', 'W', 'X', 'Y', 'Z'],
+  type: 'heatmap',
+  colorscale: 'Viridis',
+  showscale: true,
+  colorbar: {
+    title: {
+      text: 'Intensidade',
+      side: 'right',
+      font: {
+        family: 'Arial',
+        size: 14,
+        color: '#333'
+      }
+    },
+    tickfont: {
+      family: 'Arial',
+      size: 12,
+      color: '#333'
+    }
+  },
+  hoverinfo: 'x+y+z',
+  text: [
+    ['Texto A-V', 'Texto B-V', 'Texto C-V', 'Texto D-V', 'Texto E-V'],
+    ['Texto A-W', 'Texto B-W', 'Texto C-W', 'Texto D-W', 'Texto E-W'],
+    ['Texto A-X', 'Texto B-X', 'Texto C-X', 'Texto D-X', 'Texto E-X'],
+    ['Texto A-Y', 'Texto B-Y', 'Texto C-Y', 'Texto D-Y', 'Texto E-Y'],
+    ['Texto A-Z', 'Texto B-Z', 'Texto C-Z', 'Texto D-Z', 'Texto E-Z']
+  ]
+}];
+
+const layout = {
+  title: {
+    text: 'Mapa de Calor de Correlação',
+    font: {
+      family: 'Helvetica, sans-serif',
+      size: 24,
+      color: '#333'
+    },
+    x: 0.5
+  },
+  xaxis: {
+    title: {
+      text: 'Variáveis X',
+      font: {
+        family: 'Helvetica',
+        size: 16,
+        color: '#555'
+      }
+    },
+    tickangle: -45
+  },
+  yaxis: {
+    title: {
+      text: 'Variáveis Y',
+      font: {
+        family: 'Helvetica',
+        size: 16,
+        color: '#555'
+      }
+    }
+  },
+  margin: {
+    l: 50,
+    r: 100,
+    b: 80,
+    t: 100,
+    pad: 4
+  },
+  paper_bgcolor: 'white',
+  plot_bgcolor: 'white',
+  annotations: [{
+    x: 2,
+    y: 2,
+    text: 'Ponto central',
+    font: {
+      color: 'white'
+    },
+    showarrow: false
+  }]
+};
+
+const config = {
+  responsive: true,
+  displayModeBar: true,
+  modeBarButtonsToRemove: ['lasso2d', 'select2d'],
+  toImageButtonOptions: {
+    format: 'svg',
+    filename: 'heatmap_correlacao'
+  }
+};
+
+Plotly.newPlot('myDiv', data, layout, config);
+```
+
+### Exemplo 6: Gráfico de Área com Dados Temporais
+
+```javascript
+const trace1 = {
+  x: ['2024-01', '2024-02', '2024-03', '2024-04', '2024-05', '2024-06'],
+  y: [12, 18, 29, 31, 40, 43],
+  fill: 'tozeroy',
+  type: 'scatter',
+  mode: 'lines',
+  name: 'Produto A',
+  line: {
+    color: 'rgba(67, 160, 71, 0.8)',
+    width: 2,
+    shape: 'spline',
+    smoothing: 1.3
+  },
+  fillcolor: 'rgba(67, 160, 71, 0.3)'
+};
+
+const trace2 = {
+  x: ['2024-01', '2024-02', '2024-03', '2024-04', '2024-05', '2024-06'],
+  y: [15, 23, 18, 25, 32, 37],
+  fill: 'tozeroy',
+  type: 'scatter',
+  mode: 'lines',
+  name: 'Produto B',
+  line: {
+    color: 'rgba(33, 150, 243, 0.8)',
+    width: 2,
+    shape: 'spline',
+    smoothing: 1.3
+  },
+  fillcolor: 'rgba(33, 150, 243, 0.3)'
+};
+
+const data = [trace1, trace2];
+
+const layout = {
+  title: {
+    text: 'Vendas Semestrais por Produto',
+    font: {
+      family: 'Montserrat, sans-serif',
+      size: 24,
+      color: '#333'
+    },
+    x: 0.5
+  },
+  xaxis: {
+    title: {
+      text: 'Mês',
+      font: {
+        family: 'Montserrat',
+        size: 16,
+        color: '#555'
+      }
+    },
+    showgrid: false,
+    tickangle: -45
+  },
+  yaxis: {
+    title: {
+      text: 'Unidades Vendidas (mil)',
+      font: {
+        family: 'Montserrat',
+        size: 16,
+        color: '#555'
+      }
+    },
+    showgrid: true,
+    gridcolor: '#eee',
+    gridwidth: 1
+  },
+  legend: {
+    x: 0.01,
+    y: 0.99,
+    bgcolor: 'rgba(255, 255, 255, 0.7)',
+    bordercolor: '#ddd',
+    borderwidth: 1
+  },
+  paper_bgcolor: '#fafafa',
+  plot_bgcolor: '#fafafa',
+  hovermode: 'x unified',
+  shapes: [{
+    type: 'line',
+    x0: '2024-01',
+    y0: 30,
+    x1: '2024-06',
+    y1: 30,
+    line: {
+      color: 'rgba(255, 87, 34, 0.7)',
+      width: 2,
+      dash: 'dot'
+    }
+  }],
+  annotations: [{
+    x: '2024-04',
+    y: 31.5,
+    text: 'Meta Mensal',
+    showarrow: false,
+    font: {
+      family: 'Montserrat',
+      size: 12,
+      color: 'rgba(255, 87, 34, 0.9)'
+    }
+  }]
+};
+
+const config = {
+  responsive: true,
+  displayModeBar: 'hover',
+  scrollZoom: false,
+  displaylogo: false
+};
+
+Plotly.newPlot('myDiv', data, layout, config);
+```
+
+### Exemplo 7: Gráfico de Funil com Personalização Avançada
+
+```{.javascript}
+const data = [{
+  type: 'funnel',
+  y: ['Visitantes', 'Cadastros', 'Downloads', 'Compras', 'Renovações'],
+  x: [5200, 2100, 1500, 800, 400],
+  textinfo: 'value+percent initial',
+  textposition: 'inside',
+  textfont: {
+    family: 'Raleway, sans-serif',
+    size: 14,
+    color: 'white'
+  },
+  marker: {
+    color: ['#4CAF50', '#8BC34A', '#CDDC39', '#FFC107', '#FF9800'],
+    line: {
+      width: 1,
+      color: 'white'
+    }
+  },
+  connector: {
+    line: {
+      color: 'rgba(0, 0, 0, 0.2)',
+      dash: 'dot',
+      width: 1
+    }
+  },
+  hoverinfo: 'x+percent previous+percent initial',
+  hoverlabel: {
+    bgcolor: '#222',
+    font: {
+      family: 'Raleway',
+      size: 12,
+      color: 'white'
+    }
+  }
+}];
+
+const layout = {
+  title: {
+    text: 'Funil de Conversão - 2024',
+    font: {
+      family: 'Raleway, sans-serif',
+      size: 24,
+      color: '#333'
+    },
+    x: 0.5
+  },
+  margin: {
+    l: 120,
+    r: 50,
+    b: 50,
+    t: 80
+  },
+  width: 800,
+  height: 500,
+  paper_bgcolor: '#f9f9f9',
+  plot_bgcolor: '#f9f9f9',
+  funnelmode: 'stack',
+  funnelgap: 0.1
+```

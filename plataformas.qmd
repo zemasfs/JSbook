@@ -1,0 +1,150 @@
+---
+title: "Plataformas gráficas e a biblioteca `Plotly.js` "
+---
+
+## Plataformas gráficas {#sec-plataf}
+
+|   Existe um bom número de pacotes gráficos e estatísticos que vão de encontro a simulações para funções matemáticas em áreas diversas. Ilustrando, as versões pagas ou de demonstração de [Prisma Graphpad](https://www.graphpad.com/),  [Origin Lab](https://www.originlab.com/), [MathWorks Matlab](https://www.mathworks.com/products/matlab.html), [Wolfram Mathematica](https://www.wolfram.com/mathematica/), [Microsoft Power Bi](https://www.microsoft.com/pt-br/power-platform/products/power-bi), e [Grafiti SigmaPlot](https://grafiti.com/sigmaplot-detail/), suites gráficas que apresentam modelos para ajuste não linear de dados ou simulação para algumas equações.
+
+|   Dentre as iniciativas gratuitas, elenca-se [Geogebra](https://www.geogebra.org/), um software para matemática, estatística e gráficos em geral, [COPASI](https://copasi.org/), um simulador para redes bioquímicas, [Gnu Octave](https://octave.org/), uma alternativa de código aberto ao *Matlab*, e [WxMaxima](http://wxmaxima-developers.github.io/wxmaxima/), um software para *CAS* (sistema de computação algébrica) e gráficos, e [Jupyter Notebooks](https://jupyter.org/), uma plataforma para edição e visualização *online* de trechos de códigos. 
+
+|   Além desses, a forte recomendação de uso para o programa de computação estatística [R](https://cran.r-project.org/) e sua interface gráfica e ambiente integrado de desenvolvimento [RStudio](https://posit.co/download/rstudio-desktop/). A plataforma *R & RStudio* é largamente empregada em cursos acadêmicos da área, principalmente para Bioestatística. Não obstante, possui diversos pacotes que agregam recursos para visualização gráfica em Bioquímica. Entre essas bibliotecas adicionais, `nls.multstart` (modelos de cinética enzimática e de cooperatividade de Hill), `drc`(modelos de cinética e de curvas dose-resposta), `fme` (modelagem de reações bioquímicas e cinética de fármacos), e `kinfit` (modelos cinéticos, farmacológicos, logísticos, e de crescimento celular).
+
+|   Se por um lado esses sistemas permitem um estudo avançado das características de modelagem propostas, em contrapartida apresentam:
+
+```{r, eval=FALSE}
+
+1. Necessidade de instalação ou acesso credenciado em nuvem para programa/pacotes;
+2. Dependência de licença, ainda que temporária, para uso de programas;
+3. Necessidade de conexão a internet para as versões em nuvem dos programas;
+4. Preços altos ou versões de demonstração limitadas para os programas pagos;
+5. Usabilidade dependente de janelas, menus e abas específicas de cada suite;
+6. Limitação de modelos matemáticos propostos (embora o conhecimento da sintaxe de cada programa permita a inserção de equações pelo usuário);
+7. Presença de diversas janelas e abas individuais dessas, para acesso às informações de inserção e visualização gráfica de dados e funções;
+8. Programas que usualmente operam por cliques de mouse não permitem ao aprendiz a inserção em pensamento computacional envolvido em linguagens de programação (ex: *Prism*, *Geogebra*, *Origin*, *Sigma Plot*)
+9. Programas que não trabalham com linhas de comando produzem os resultados gráficos em janelas diferentes, exigindo alterância à sua usabilidade;
+10. Gráficos produzidos visualizados somente dentro dos programas;
+11. Alguns programas para gráficos não permitem a abertura de mais de uma sessão (ex: *Origin*, *Prism*)
+12. Uma vasta coleção de funcionalidades de cada suite, muito além da necessidade básica que envolve um estudo para compreensão de um gráfico;
+13. Gráficos renderizáveis por vezes apenas bidimensionalmente, e não em 3D;
+14. Tipos gráficos 2D bastante limitados para alguns programas;
+15. Um caminho por vezes detalhado e único junto aos programas, entre janelas e abas, para se buscar apenas a funcionalidade específica à elaboração de um gráfico simulado por uma função matemática;
+16. Níveis limitados para ações de "desfazer/refazer" (*undo/redo*) para vários programas listados acima;
+17. Dependência de hardware de bom desempenho para alguns programas (exemplificando, *Origin Lab* requer 3 GB de memória de disco e um mínimo de 4GB de RAM para operar, essa última também necessária ao *Matlab*);
+18. Limitação de compartilhamento para o arquivo original do gráfico a quem não possua o mesmo programa, e impossibilitando também a personalização do produto (ex: limites e rótulos de eixos, novos dados, títulos e subtítulos);
+19. Compartilhamento do gráfico produzido como arquivo de imagem, ou como arquivo compilável especificamente em cada programa;
+20. Produção e compartilhamento de gráficos sem qualquer interatividade (*Power Bi* e outros pagos, como excessões raras);
+21. Apresentação estática dos dados e gráficos envolvidos na confecção (à excessão de alguns pacotes para *R*, incluindo `plotly`);
+22. Limitação de uso em ambientes virtuais de aprendizagem (instalação de programas no portal, por ex) e, por conseguinte, para algumas modalidades de ensino (ex: híbrido, EaD).
+```
+
+
+
+## A biblioteca `Plotly.js`
+
+
+|   A biblioteca `Plotly.js` constitui uma ferramenta de código aberto  para visualização de dados interativos em *JavaScript*. Foi criada pela empresa [Plotly Inc.](https://plotly.com/), fundada em 2013 por Alex Johnson, Chris Parmer e Jack Parmer, e lançada em 2015 pela empresa homônima. A empresa é sediada no Canadá, e permanece como a principal mantenedora do `Plotly.js`, além de outras soluções analíticas, como *Dash*, um *framework* popular para aplicações *web* baseadas em *Python* e *R*. `Plotly.js` está sob a licença *MIT* (Massachusetts Institute of Technology), para modificação, cópia, distribuição, e venda de softwares, preservados os direitos autorais e a licença.
+
+|   A biblioteca foi originalmente idealizada para aplicações científicas e empresariais, como uma solução de contorno à limitações de interatividade de outras bibliotecas para uso na *web* (*D3.js*, *WebGL*, e *Chart.js*). O principal diferencial de `Plotly.js` é sua habilidade para criação e manejo de gráficos diretamente em um visualizador HTML ou navegador de internet, embora sem a necessidade de renderização em servidor, e mesmo de conexão à rede. Essa habilidade decorre da incorporação da linguagem *JavaScript* na estrutura moderna de *HTML5*.
+
+|   `Plotly.js` é amplamente utilizada por instituições e empresas de porte, incluindo NASA, Google, Microsoft, MIT, Harvard, Johns Hopkins University, e IBM, em função de sua flexibilidade e capacidade para lidar com grandes volumes de dados interativos. Para informações detalhadas, documentação oficial e exemplos de uso, sugere-se consultar os repositórios do `Plotly.js` no [GitHub](https://github.com/plotly/plotly.js), bem como os tutoriais e documentação disponíveis no [site oficial](https://plotly.com/javascript/), ou sites devotados à linguagem (ex: [W3Schools](https://www.w3schools.com/js/js_graphics_plotly.asp).
+
+
+## Plataformas gráficas X `Plotly.js`
+
+
+|   Algumas características chancelam `Plotly.js` como uma alternativa séria e potencial para uso, tanto em pesquisa científica, como em contexto educacional, e nominalmente em função de *dois simples aspectos*:
+
+
+```{r, eval=FALSE}
+1. O gráfico é gerado diretamente em HTML;
+2. Pode-se agregar valor ao gráfico com outras bibliotecas `JavaScript`
+```
+
+
+|   Frente à essas 2 características, emerge da estrutura da biblioteca as seguintes vantagens para um gráfico construído com `Plotly.js`, e em relação a concorrentes:
+
+
+```{r, eval=FALSE}
+1. Não requer instalação;
+2. Não requer requisitos complementares (ex: bibliotecas *.NET Microsoft*, Java*);
+3. Não requer conexão de rede;
+4. Não requer configuração de máquina de mínimo desempenho (ex: memória RAM);
+5. Pode ser carregado a partir de um simples visualizador de HTML (*Firefox*, *Edge*, *Safari*, *Chrome*);
+6. Não requer um editor específico para construção, podendo ser elaborado a partir de um simples bloco de notas;
+7. Possui código-fonte e produto contidos em um mesmo arquivo, facilitando armazenamento e compartilhamento;
+8. Pode ser carregado a partir de computador, dispositivos móveis (smartphone) ou removíveis (pendrive);
+9. É interpretado a partir de um código de texto simples, utilizando memória física desprezível (20kB), ainda que permita a elaboração de gráficos sofisticados, interativos e dinâmicos (atualização por evento de usuário ou em tempo real);
+10. Por ser passível de construção em editor simples de texto, possui compartilhamento irrestrito de seu código-fonte;
+11. É capaz de produzir gráficos 2D e 3D interativos instantaneamente, e tanto a partir de equações, como de dados inseridos pelo usuário;
+12. É capaz de produzir mapas interativos, elevando a extensão de uso para aplicações não matemáticas;
+13. Correlaciona-se diretamente ao uso de linguagens de programação, tal como requerido pela *4a. e 5a. Revolução Industrial*, e respectivamente  espelhados nas competências digitais da *Educação 4 e 5.0*; 
+14. Por sua simplicidade como arquivo único em HTML, pode ser incorporado em páginas da web ou ambientes virtuais, permitindo seu uso para qualquer modalidade de ensino-aprendizagem (ex: presencial, híbrido, remoto, EaD);
+15. Insere-se nos conceitos de *pesquisa reproduzível* bem como de *ensino reprodutível*, alicerçados pelo acesso e compartilhamento abertos, facilitados e documentados, para ferramentas digitais direcionadas a conteúdos científico, bem como das matrizes curriculares;
+16. Permite que se incorpore no código-fonte outras bibliotecas em *JavaScript*, complementares à produção e manejo gráficos (ex: *numjs* para computação numérica e álgebra linear, *jsmath* para notações matemáticas complexas, *jStat* para computação estatística);
+18. Possui diversas ações interativas por cliques de mouse, e que pontuam um grau lúdico à experimentação de funções matemáticas;
+19. Renderiza gráficos a partir de linguagem de programação moderna e largamente utilizada, o que também permite ao aprendiz sua inserção paulatina em técnicas de programação contidos em outras linguagens recorrentes (*Python*, *R*), e do mundo *geek* (Arduino - *C/C++*).
+```
+
+
+
+[^1]: Dermawan, Arief, et al. ["A Systematic Literature Review of Digital Skills and Human Resource Readiness for the Industrial Revolution Era 4.0 and 5.0." JMKSP (Jurnal Manajemen, Kepemimpinan, dan Supervisi Pendidikan) 10.1 (2025): 245-259](https://jurnal.univpgri-palembang.ac.id/index.php/JMKSP/article/view/17965).
+[^2]: Akturk, Cemal, Tarık Talan, and Ceren Cubukcu Cerasi. ["Education 4.0 and University 4.0 from Society 5.0 Perspective." 2022 12th International conference on advanced computer information technologies (ACIT). IEEE, 2022](https://ieeexplore.ieee.org/abstract/document/9913099).
+
+|   Parte das características acima coadunam com a proposta de abordagem metodológica de *Pesquisa Reproduzível* [^3], como de *Ensino Reprodutível* [^4], uma vez que cumpre os requisitos para ambas as arestas de conhecimento e informação de:
+
+```{r, eval=FALSE}
+1. Dados e códigos abertos;
+2. Documentação detalhada;
+3. Ambiente computacional reproduzível;
+4. Compartilhamento e ética. 
+```
+
+[^3]: Peng, Roger D., and Stephanie C. Hicks. ["Reproducible research: a retrospective." Annual review of public health 42.1 (2021): 79-93](https://www.annualreviews.org/content/journals/10.1146/annurev-publhealth-012420-105110). 
+[^4]: Dogucu, Mine, and Mine Çetinkaya-Rundel. ["Tools and recommendations for reproducible teaching." Journal of Statistics and Data Science Education 30.3 (2022): 251-260](https://www.tandfonline.com/doi/full/10.1080/26939169.2022.2138645).
+
+
+## Racional para um gráfico e as habilidades de `Plotly.js` {#sec-introd}
+
+|   Independentemente do programa ou aplicativo móvel para construção de um gráfico, a *receita* costuma trilhar um caminho comum, tal como:
+
+1. Uso de uma equação ou de um conjunto de dados (ex: *x,y* para 2D; *x,y e z* para 3D) para confecção do gráfico;
+1. Definição do tipo de gráfico (ex: ponto, linhas, barras, etc) 
+1. Geração de gráfico (2D ou 3D);
+1. Ajuste visual (ex: ampliação/redução, limites de eixos);
+1. Personalização (cores, linhas, estilos);
+1. Rotulagem (título, subtítulo, eixos);
+1. Adição de outros conjuntos de dados (ex: múltiplas curvas);
+1. Formatação de legendas;
+1. Utilização de marcadores (ex: setas);
+1. Utilização de anotações;
+1. Exportação em arquivo (ex: *png, svg, jpeg*).
+
+|   Para uma biblioteca gráfica como `plotly.js` não é diferente, podendo-se construir uma diversidade rica de gráficos (*40 tipos*, segundo o [mantenedor](https://plotly.com/javascript/). Não obstante, `plotly.js` permite extender significativamente a experiência de usuário de forma dinâmica, possibilitando uma abordagem intrinsecamente interativa à visualização de dados. Essa interatividade de `plotly.js` é facultada por diversas habilidades da biblioteca, tanto por ações de mouse como por inserções de eventos, a destacar: 
+
+
+```{r, eval=FALSE}
+1. Efeito de afastamento/aproximação visual 1. geral ou de área específica (*zoom*);
+2. Arraste do ecrã de visualização (*pan*, panorâmica);
+3. Deslocamento individual de eixos;
+4. Retorno à configuração original (*reset*);
+5. Seleção de dados/pontos individuais ou coletivos por (*box* ou *lasso*);
+6. Informações por passagem de mouse (*hover* ou *mouse over*; ex: exibição dinâmica de valores);
+7. Dicas customizáveis de ferramentas (*tooltips*);
+8. Legendas interativas;
+9. Gráficos dinâmicos (atualização automática em fluxo);
+10. Navegação detalhada (*drill1.down*; exploração em área específica);
+11. Botões personalizados no  (*buttons*);
+12. Eventos personalizados por mouse ou ação de usuário (*callbacks*, atualização de página por interação);
+13. Deslizadores (*sliders*) e menus para filtragem de informações;
+14. Marcação de dados por linhas pontilhadas nos eixos gráficos e *hover* (*Toggle Spike Lines*);
+15. Menu de ícones para interatividade padrão (*Mode bar*);
+16. Personalização do *Mode bar* (ex: exportação da imagem em SVG, cópia de dados do gráfico para a área de transferência);
+17. Animações em *layout* ou transição de dados;
+18. Facetas interativas (*facets*, gráficos lado a lado);
+19. Sincronização entre gráficos interconectados (*zoom* e seleção de dados);
+20. Criação de paineis dinâmicos interativos (*dashboards*);
+21. Integração com bibliotecas interativas (*D3.js* e *React.js*) ou analíticas (ex: *numjs*, *mathjs*, *jstat*).
+```
+
+

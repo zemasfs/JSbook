@@ -1,0 +1,362 @@
+---
+title: "Plotly & Equações funcionais"
+---
+
+# Introdução ao Plotly.js para Equações
+
+Este tutorial apresenta uma abordagem progressiva para criar visualizações de equações usando Plotly.js. Começaremos com conceitos básicos e avançaremos para implementações mais complexas.
+
+## Estrutura Básica de um Gráfico Plotly
+
+### Componentes Essenciais
+
+Todo gráfico Plotly.js possui três componentes principais:
+
+1. Dados (x e y)
+2. Configuração do traço (trace)
+3. Layout
+
+Exemplo básico:
+
+```{r, eval=FALSE}
+// Dados
+const x_values = [1, 2, 3, 4, 5];
+const y_values = [2, 4, 6, 8, 10];
+
+// Configuração do traço
+const trace = {
+    x: x_values,
+    y: y_values,
+    type: 'scatter',
+    mode: 'lines+markers'
+};
+
+// Layout
+const layout = {
+    title: 'Gráfico Básico',
+    xaxis: { title: 'Eixo X' },
+    yaxis: { title: 'Eixo Y' }
+};
+
+// Renderização
+Plotly.newPlot('grafico', [trace], layout);
+```
+
+### 1.2 Personalização de Cores e Estilos
+
+O Plotly oferece várias opções para personalização visual:
+
+```{r, eval=FALSE}
+const trace = {
+    x: x_values,
+    y: y_values,
+    type: 'scatter',
+    mode: 'markers',
+    marker: { 
+        size: 8,
+        color: 'red',
+        symbol: 'circle'
+    },
+    line: {
+        color: 'blue',
+        width: 2,
+        dash: 'dot'
+    }
+};
+```
+
+## 2. Implementação de Equações Básicas
+
+### 2.1 Função Quadrática
+
+Baseado no arquivo `quadratica.js`:
+
+```{r, eval=FALSE}
+const a = 2;
+const b = -3;
+const c = 5;
+
+const x_values = [];
+const y_values = [];
+for (let i = -10; i <= 10; i += 0.5) {
+    x_values.push(i);
+    y_values.push(a * Math.pow(i, 2) + b * i + c);
+}
+
+const trace = {
+    x: x_values,
+    y: y_values,
+    type: 'scatter',
+    mode: 'lines',
+    name: 'y = ax² + bx + c'
+};
+```
+
+### 2.2 Função Exponencial
+
+Baseado no arquivo `exponenc.js`:
+
+```{r, eval=FALSE}
+const x_values = Array.from(
+    {length: 50}, 
+    (_, i) => (i - 25) * 0.2
+);
+const y_values = x_values.map(x => Math.exp(x));
+
+const trace = {
+    x: x_values,
+    y: y_values,
+    type: 'scatter',
+    mode: 'lines',
+    name: 'y = e^x'
+};
+```
+
+## 3. Equações Bioquímicas
+
+### 3.1 Equação de Michaelis-Menten
+
+Baseado no arquivo `MM.js`:
+
+```{r, eval=FALSE}
+const Vmax = 100;
+const Km = 10;
+const x_values = Array.from(
+    {length: 200}, 
+    (_, i) => i * (50 / 199)
+);
+const y_values = x_values.map(S => (Vmax * S) / (Km + S));
+
+const trace = {
+    x: x_values,
+    y: y_values,
+    type: 'scatter',
+    mode: 'lines',
+    name: 'Michaelis-Menten'
+};
+
+const layout = {
+    title: 'Curva de Michaelis-Menten',
+    xaxis: { title: 'Concentração de Substrato [S]' },
+    yaxis: { title: 'Velocidade da Reação (V)' }
+};
+```
+
+### 3.2 Equação de Henderson-Hasselbalch
+
+Baseado no arquivo `handersson-hasselb.js`:
+
+```{r, eval=FALSE}
+const pKa = 7.4;
+const A_conc = Array.from(
+    {length: 200}, 
+    (_, i) => i * 0.05
+);
+const pH_values = A_conc.map(
+    A_ratio => pKa + Math.log10(A_ratio)
+);
+
+const trace = {
+    x: A_conc,
+    y: pH_values,
+    type: 'scatter',
+    mode: 'lines',
+    name: 'Henderson-Hasselbalch'
+};
+```
+
+### 3.3 Curva de Ligação Hemoglobina-O2
+
+Baseado no arquivo `Hb-O2bind.js`:
+
+```{r, eval=FALSE}
+const P50 = 26;
+const n = 2.8;
+const O2_values = Array.from(
+    {length: 200}, 
+    (_, i) => i * (100 / 199)
+);
+
+const Y_values = O2_values.map(
+    O2 => Math.pow(O2, n) / (Math.pow(P50, n) + Math.pow(O2, n))
+);
+
+const trace = {
+    x: O2_values,
+    y: Y_values,
+    type: 'scatter',
+    mode: 'lines',
+    name: 'Curva de Hill'
+};
+```
+
+## 4. Equações de Cinética e Termodinâmica
+
+### 4.1 Equação de Van't Hoff
+
+Baseado no arquivo `vantHoff.js`:
+
+```{r, eval=FALSE}
+const R = 8.314;
+const ΔH = -50000;
+const T_values = Array.from(
+    {length: 200}, 
+    (_, i) => 273 + i * (100 / 199)
+);
+
+const K_values = T_values.map(
+    T => Math.exp(-ΔH / (R * T))
+);
+
+const trace = {
+    x: T_values,
+    y: K_values,
+    type: 'scatter',
+    mode: 'lines',
+    name: "Van't Hoff"
+};
+```
+
+### 4.2 Curva de Desnaturação
+
+Baseado no arquivo `desnatBiopol.js`:
+
+```{r, eval=FALSE}
+const Tm = 60;
+const x_values = Array.from(
+    {length: 200}, 
+    (_, i) => i * (100 / 199)
+);
+
+const y_values = x_values.map(
+    T => 1 / (1 + Math.exp(-(T - Tm) / 5))
+);
+
+const trace = {
+    x: x_values,
+    y: y_values,
+    type: 'scatter',
+    mode: 'lines',
+    name: 'Desnaturação'
+};
+```
+
+## 5. Análise de Dados
+
+### 5.1 Regressão Linear Simples
+
+Baseado no arquivo `regress.linear.js`:
+
+```{r, eval=FALSE}
+function calcularRegressao(x, y) {
+    const n = x.length;
+    const sum_x = x.reduce((a, b) => a + b, 0);
+    const sum_y = y.reduce((a, b) => a + b, 0);
+    const sum_xy = x.map((xi, i) => xi * y[i])
+                    .reduce((a, b) => a + b, 0);
+    const sum_x2 = x.map(xi => xi * xi)
+                    .reduce((a, b) => a + b, 0);
+
+    const m = (n * sum_xy - sum_x * sum_y) / 
+             (n * sum_x2 - sum_x * sum_x);
+    const b = (sum_y - m * sum_x) / n;
+
+    return { m, b };
+}
+
+// Criar linha de regressão
+const { m, b } = calcularRegressao(x_values, y_values);
+const x_reg = [Math.min(...x_values), Math.max(...x_values)];
+const y_reg = x_reg.map(x => m * x + b);
+```
+
+### 5.2 Regressão Linear com Estatísticas
+
+Baseado no arquivo `regress_lin_completa.js`:
+
+```{r, eval=FALSE}
+function calcularRegressaoCompleta(x, y) {
+    const n = x.length;
+    const x_mean = x.reduce((a, b) => a + b, 0) / n;
+    const y_mean = y.reduce((a, b) => a + b, 0) / n;
+    
+    const { m, b } = calcularRegressao(x, y);
+    const y_pred = x.map(xi => m * xi + b);
+    
+    const ss_tot = y.reduce(
+        (acc, yi) => acc + Math.pow(yi - y_mean, 2), 
+        0
+    );
+    const ss_res = y.reduce(
+        (acc, yi, i) => acc + Math.pow(yi - y_pred[i], 2), 
+        0
+    );
+    
+    const r2 = 1 - (ss_res / ss_tot);
+    const se = Math.sqrt(ss_res / (n - 2));
+    
+    return { m, b, r2, se };
+}
+```
+
+## 6. Visualizações 3D
+
+### 6.1 Gráfico de Dispersão 3D
+
+Baseado no arquivo `allEq_3Ddispersao.js`:
+
+```{r, eval=FALSE}
+const num_points = 100;
+const x_values = Array.from(
+    {length: num_points}, 
+    () => Math.random() * 20 - 10
+);
+const y_values = Array.from(
+    {length: num_points}, 
+    () => Math.random() * 20 - 10
+);
+const z_values = Array.from(
+    {length: num_points}, 
+    () => Math.random() * 20 - 10
+);
+
+const scatter3d = {
+    x: x_values,
+    y: y_values,
+    z: z_values,
+    mode: 'markers',
+    type: 'scatter3d',
+    marker: {
+        size: 5,
+        color: z_values,
+        colorscale: 'Viridis',
+        opacity: 0.8
+    }
+};
+```
+
+### 6.2 Superfície 3D
+
+Baseado no arquivo `allEq_3Dsurfac.js`:
+
+```{r, eval=FALSE}
+const x_values = [...Array(30).keys()].map(i => i - 15);
+const y_values = [...Array(30).keys()].map(i => i - 15);
+
+const z_values = x_values.map(x =>
+    y_values.map(y => 
+        Math.sin(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)))
+    )
+);
+
+const surface = {
+    x: x_values,
+    y: y_values,
+    z: z_values,
+    type: 'surface'
+};
+```
+
+## Conclusão
+
+Este tutorial cobriu desde conceitos básicos até implementações avançadas de equações usando Plotly.js. Para mais informações e documentação completa, visite a [documentação oficial do Plotly](https://plotly.com/javascript/).

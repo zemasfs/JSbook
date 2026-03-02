@@ -1,0 +1,130 @@
+---
+title: "Uso básico do *JSPlotly* para estudo de funções gráficas"
+engine: knitr
+---
+
+|   Do modo como foi concebido, é possível utilizar o *JSPlotly* para uma gama extensa de gráficos interativos, em 2D e 3D, bem como para cálculos matemáticos e modelagem a dados do usuário (ajuste linear, curvilinear, e não linear), os últimos pelas bibliotecas `jsMath`e `numjs`. Neste capítulo será conduzido um tutorial para a produção e estudo de gráficos básicos.
+
+
+## Um gráfico simples de função *na unha*.
+
+|   Tendo por base os capítulos anteriores, pode-se construir um gráfico para inserção de dados de usuário, ou para o estudo de uma função matemática, pura ou inserida no contexto das Ciências. Os gráficos pode ser de dados ou de funções. Para os primeiros, basta uma consulta ao material desta obra, em particular na @sec-arquitet. Ao longo dos capítulos foi direcionado como realizar um gráfico de dados, principalmente. No estudo de comportamento de funções que surgem em livros-texto técnico-científicos, contudo, há diversas relações matemáticas concretizadas como funções gráficas. Nesse sentido, pode-se utilizar a biblioteca `Plotly.js` para construção e estudo comparativo de gráficos de funções, mais do que de dispersão de dados, para tais análises. Sendo assim, o uso de *JSPlotly* pode auxiliar significativamente nesta direção, ou seja, na apropriação de relações gráficas definidas por funções matemáticas, tal como as presentes em áreas e níveis de espectro amplo. 
+
+|   Ainda que seja possível alterar qualquer termo para variável dependende, independente, limites de eixos, e *laioute*, o *JSPlotly* está configurado para aceitar somente os termos abaixo:
+
+```{r, eval=FALSE}
+
+x # valores do eixo X
+y_values # valores do eixo Y
+x_range e y_range # limites dos eixos
+layout # personalização de gráfico
+Plotly.newPlot # comando interno do aplicativo
+```
+
+
+|   Sendo assim, um trecho de código bem simples para a construção de um gráfico de potência, por exemplo, poderia ser:
+
+```{js}
+
+
+const x = [...Array(50).keys()];  // gera dados de 0 a 49, e com
+      // espaçamento unitário
+const y_values = x.map(x => Math.pow(x, 3)); // aplica potência x^3 
+return { x, y_values}; // plota o gráfico
+
+```
+
+
+|   Nesse caso, a saída do gráfico será a representada na @fig-potenc .
+
+![Exemplo de trecho simples de código para função de potência com *JSPlotly* - x$^{3}$.](potenc.png){#fig-potenc}
+
+
+
+|   Veja que não é necessário o comando *Plotly.newPlot()*, pois está internalizado no código-fonte. Mas também é possível uma alteração no código acima para absorver o comando de plotagem, veja:
+
+```{js}
+const x = [...Array(50).keys()];  // Cria de 0 a 49
+const y = x.map(x => Math.pow(x, 4));  // Eleva cada x à quarta potência
+
+const trace = {
+  x: x,
+  y: y,
+  type: 'scatter',
+};
+
+Plotly.newPlot('grafico', [trace])
+```
+
+
+|   Alternativamente, o *array* de valores calculados pode ser determinado de outras formas, como para uma determinada faixa de valores:
+
+```{js}
+const x = Array.from({length: 50}, (_, i) => i - 25);
+
+//  Explicando:
+// 1. length: quantidade de elementos do array;
+// 2. (_, i): função de mapeamento - "_", elemento atual, "i", índice do
+    // elemento no array;
+// 3. i - 25: expressão -ex: Se i = 0, então i-25 = -25 
+
+// Portanto, será criado um array de 50 elementos, de -25 a 24.
+```
+
+
+
+
+|   Para se observar melhor o comportamento da função estimada, no caso de potência, basta alterar um parâmetro da equação, no caso, o expoente. E, para isso, tão simples quanto, apenas modifica-se no *script* do código seu valor, adicionando-se o gráfico a se comparar por *Add Plot*, tal como apresentado na @fig-potencMais.
+
+![Uma comparação entre expoentes da função de potência (x$^{3}$ e x${4}$), como exemplo do potencial de *JSPlotly* para o estudo de comportamentos gráficos mediados por equações matemáticas.](potencMais.png){#fig-potencMais}
+
+|   Agora veja que, pela natureza a biblioteca `Plotly.js`, é possível uma série de interações com o gráfico, tais como demonstrado na @sec-interativ, bem como salvá-lo como imagem (*PNG*) ou como arquivo HTML autônomo, salvar o *script* do editor, entre outras operações.
+
+
+|   Uma versão um pouco mais completa para o gráfico de potência poderia incluir um limite para os valores da variável independente, bem como rótulos, tais como títulos e eixos. Segue uma versão.
+
+```{js}
+const x_values = Array.from({length: 50}, (_, i) => 0 + i * 0.5);
+const y_values = x_values.map(x => Math.pow(x, 4));
+
+const x_label = "Valores de X";
+const y_label = "Valores de Y";
+const title = "Equação Quadrática";
+
+// Retornando os valores para o editor
+return { x_values, y_values, x_label, y_label, title };
+```
+
+![Gráfico de potência com alteração no *script* para inserção de rótulos (embora não estejam aparecendo !).](no_layout.png){#fig-no_layout}
+
+
+|   Observe que, à despeito da inserção de dados de rotulagem, os títulos (gráfico e eixos) não aparecem na representação. Isso ocorre porque é necessário criar o objeto *layout* para inserção dessas informações, como segue.
+
+
+```{js}
+
+const x_values = Array.from({length: 50}, (_, i) => 0 + i * 0.5);
+const y_values = x_values.map(x => Math.pow(x, 4));
+
+const x_label = "Valores de X";
+const y_label = "Valores de Y";
+const title = "Equação Quadrática";
+
+// Criar o layout com os rótulos e título
+const layout = {
+  title: title,
+  xaxis: { title: x_label },
+  yaxis: { title: y_label }
+};
+
+// Retornando para o editor, incluindo o layout
+return { x_values, y_values, layout };
+```
+
+
+![Mesmo gráfico acima, embora com objeto *layout* para rotulagem.](yes_layout.png){#fig-yes_layout}
+|   Veja que foi necessário criar o objeto *layout* para que os rótulos sejam visualizados. 
+
+|   Isso reforça o que foi explicitado na @sec-arquitet, ou seja: para um gráfico detalhado, é necessário o conjunto de *dados e layout*, o que lhe permite títulos, plano fundo, marginação, dimensões, e intervalos, entre outros.
+
+

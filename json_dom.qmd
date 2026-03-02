@@ -1,0 +1,85 @@
+---
+title: "JSON & DOM"
+format:
+  html:
+    page-layout: full
+    theme: zephyr   # pode trocar o tema à vontade
+    toc: true
+
+include-in-header:
+  - text: |
+      <style>
+      :root{
+        --lv-sidebar-w: 330px;
+        --lv-side-solid: #e8f0ff;  /* cor da sidebar */
+        --lv-main-solid: #f5f8fc;  /* <<< cor do CONTEÚDO */
+      }
+      /* use cores sólidas: */
+      #quarto-sidebar{ background: var(--lv-side-solid) !important; }
+      main.content,
+      #quarto-margin-sidebar{
+        background: var(--lv-main-solid) !important;
+      }
+      /* opcional: reduzir o espaço entre colunas */
+      #quarto-content.page-columns{ gap: 10px 16px; }
+      #quarto-sidebar{ width: var(--lv-sidebar-w); }
+      </style>
+
+  - text: |
+      <style>
+         /* ===== largura máxima do conteúdo ===== */
+        :root { --content-max-width: 1600px; }
+
+        /* ===== cores utilitárias (suas classes) ===== */
+        .red  { color: #e53935; }
+        .blue { color: dodgerblue; }
+        .green {color: green}
+        .darkblue  { color: #003366; }   /* azul escuro */
+        .darkgreen { color: #006400; }   /* verde escuro */
+        .orange    { color: #ff8c00; }   /* laranja */
+        .purple    { color: #800080; }   /* roxo */
+        .note { color:#6f42c1; background:#f3e8ff; padding:2px 6px; border-radius:6px; }
+       </style>
+
+---
+
+
+|   Este material não intenciona qualquer aprofundamento na linguagem *JavaScript*, e sim um direcionamento de seu aprendizado para uso mais confortável de códigos junto ao simulador *JSPlotly* e seu gerador de códigos *GSPlotly*. Contudo, dois conceitos importantes surgem quando da construção de objetos interativos mais complexos no aplicativo, e que são descritos suscintamente a seguir.
+\
+
+## JSON
+
+|   *JSON* é um acrônimo para *JavaScript Object Notation*, um formato de texto popular utilizado no armazenamento e troca de dados. Por essa notação, um subconjunto da linguagem *JS*, os dados são armazenados por listas separadas por vírgulas e contendo o *par chave:valor* dentro de um objeto *JSON*.
+
+|   Essa notação também é parecida com *XML (eXtensible Markup Language*) utilizada para a web, embora *JSON* tenha a vantagem de extração direta de dados para uma *string* de fácil leitura. Para tanto, utiliza-se o método *JSON.parse()*. Na mesma linha, converte-se um objeto *JavaScript* para um objeto *JSON* pelo método *JSON.stringfy()*.
+
+|   As características gerais da notação *JSON* envolvem:
+
+```{.javascript}
+
+1. Objetos: conjunto de pares chave-valor delimitados por chaves; ex: {tipo:carro, marca: fiat, cor:verde};
+2. Arrays: lista ordenada de valores delimitada por colchetes; ex:
+3. Tipos de dados: strings, números, booleans (true, false);
+4. Separadores: vírgulas para separar para chave-valor;
+5. Null: sem definição
+```
+\
+
+|   Dessa forma, a notação *JSON* apresenta-se leve, facilmente interpretável tanto por humanos como por máquinas, e compatível com outras linguagens de programação (*Java*, *Python*). Além disso, alicerça a construção de *API*s (*Application Programming Interface*), a interface de aplicativos frequentemente utlizada para a comunicação entre o *front-end* (cliente, interativo) e o *back-end* (servidor, processamento) de aplicações web. 
+
+
+<!-- ```{=html} -->
+<!-- <div style="margin:1rem 0; padding-right:16px;"> -->
+<!--   <iframe src="apps/JSPlotly_treinoJS.html" -->
+<!--           width="100%" height="760" -->
+<!--           style="border:0;border-radius:10px;"></iframe> -->
+<!-- </div> -->
+<!-- ``` -->
+<!-- \ -->
+
+
+## DOM 
+
+|   Também um acrônimo, refere-se a *Document Object Model*, um formato ramificado em árvore para níveis e subníveis, e que constitui o modo como as páginas web representam todos os seus elementos. Exemplificando, para o ramo *window*, cabem *document, location, history, screen, frames, navigator*. 
+
+|   E dentro do ramo *window*, inserem-se *forms, achors, images, links*. Dessa forma produz-se uma lista com todas as propriedades de exibição para um objeto construido para um browser, muitas vezes às centenas. Ilustrando-se, propriedades para *scrolling* de páginas, janelas *pop-up*, *timer*, *plugins* de navegação, *location* e *history* de cada objeto. 

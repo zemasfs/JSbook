@@ -1,0 +1,189 @@
+---
+title: "Construção de gráficos"
+engine: knitr
+format:
+  html:
+    self-contained: true
+    include-in-header:
+      text: |
+        <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+
+---
+
+## A arquitetura de um código para `Plotly.js` {#sec-arquitet}
+
+|   Diferente dos programas elencados na @sec-plataf, como de tantos outros, e bem como de aplicativos para dispositivos móveis, um gráfico em `Plotly.js` é executado dentro de um *container* estruturado em *HTML*. Isso equivale dizer que o gráfico pode ser construido em qualquer editor para HTML, incluindo um *simples bloco de notas*,  e visualizado *offline* em qualquer *browser* (navegador) moderno (ex: Google Chrome, Safari, Firefox, Opera, etc).  Dessa forma, o gráfico não é propriamente compilado a partir de códigos para sua exibição, mas sim interpretado, já que a linguagem *JavaScript* em que se ampara a biblioteca é uma linguagem de interpretação, e não de compilação. Ou seja, a biblioteca não requer o uso de um compilador para tradução do código-fonte à linguagem de máquina, e previamente à execução do programa. Nesse caso, o código-fonte para um gráfico `Plotly.js` é executado diretamente pelo interpretador *JavaScript* do navegador HTML5.
+
+|   Como é usual para bibliotecas em *JavaScript*, o *container* HTML requer o caminho para uso da *biblioteca `Plotly.js`* , tal como segue:
+
+```{js}
+https://cdn.plot.ly/plotly-latest.min.js
+```
+
+
+|   Entre muitas possibilidades de configuração e formatação, um *container bem simples*, mas adequado para a construção de um gráfico em `Plotly.js` pode ser o que segue. Para utilizá-lo, basta copiá-lo pelo ícone de *pasta* no canto superior direito do trecho de código, e colá-lo num editor de texto comum.
+
+
+
+|   A partir desse *container*, é possível inserir a estrutura do gráfico para exibição em uma página HTML *interativa*. Essa estrutura, tal como contemplada na @sec-introd para a geração de um gráfico comum, é confinada em `Plotly.js` a partir de sua linha de comando, a qual contempla *4 argumentos* principais, a saber:
+
+
+```{r, eval=FALSE}
+Plotly.newPlot(
+    divId,  # 1o. argumento; identificação do gráfico na estrutura do 
+              # container HTML (ou ID do elemento HTML)
+    data,   # 2o. argumento: dados do gráfico ou conjunto de traços
+              # (trace array)
+    layout, # objeto de layout (ou leiaute, disposição de elementos - plano
+            # de fundo, títulos, legenda, margens, dimensões, intervalos)
+    config  # objeto de configuração (controla o comportamento da interface)
+)
+```
+
+
+|   Assim, para a construção de um gráfico `Plotly.js` convencional, a estrutura envolverá:
+
+- Construir cada trecho de argumentos (ao menos *divId* e *data*);
+- Elaborar a linha de chamada do gráfico.
+
+|   Em síntese:
+
+```{js}
+Plotly.newPlot(divId, data, layout, config{objeto i: true})
+```
+
+
+|   Como observado acima, o `Plotly.js` opera com camadas de *objetos JavaScript*. É possível, portanto, obter um gráfico sem a necessidade de inserção de todos os objetos. A respeito, veja um exemplo pra lá de básico, com apenas a camada que identifica o gráfico e apresenta o ecrã:
+
+
+```{js}
+Plotly.newPlot('grafico')
+```
+
+
+::: {#fig-eixos}
+```{=html}
+<!DOCTYPE html>
+<html>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<body>
+<div id="meu_grafico" style="width:100%;max-width:700px"></div>
+
+<script>
+
+
+Plotly.newPlot('meu_grafico')
+
+</script>
+
+</body>
+</html>
+```
+Gráfico contendo apenas uma camada padrão para os eixos.
+:::
+
+|   Adicionando-se mais camadas, como num editor de imagens (*Photoshop/Gimp*, *Corel Draw/Inkscape*), torna-se possível sofisticar progressivamente o gráfico. Segue um trecho de código para um gráfico simples em camadas com a sintaxe `Plotly.js`. 
+
+
+```{js, eval=FALSE}
+      var trace = {  // declaração para variável de dados x e y
+            x: [1, 2, 3, 4, 5],
+            y: [10, 15, 7, 12, 18],
+            type: 'scatter', // tipo de gráfico
+        };
+        Plotly.newPlot('grafico', [trace]); // comando para o gráfico
+```
+
+
+|   O gráfico contendo a instrução acima precisa, como mencionado, ser inserido num *container HTML* para sua interpretação e execução. Um *container* refere-se a um elemento HTML que agrupa conteúdos para uma página web. Assim, se desejar reproduzi-lo como um arquivo HTML *self-contained*, ou seja, autônomo, preseservando sua interatividade original, basta inserir o trecho acima num *container HTML*, salvando o conjunto como arquivo HTML. Na prática, copie o conjunto explicitado abaixo num editor de texto, e armazene-o ou renomei-o como um arquivo HTML.
+
+
+|   Segue o código-fonte do gráfico e sua visualização como arquivo HTML.
+
+```{js, eval=FALSE}
+<!DOCTYPE html> <!---declaração de documento HTML5--->
+<html lang="pt"> <!---tag de início do documento, e linguagem--->
+<head>
+    <meta charset="UTF-8"> <!--- tag de codificação de caracteres da página--->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--- controle para edição de página HTML e escalonamento (dispositivos móveis, por ex) --->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> <!--- caminho pra biblioteca --->
+  </head>
+<body>
+    <div id="grafico"></div> <!---identificação do gráfico (ID)--->
+
+    <script>
+
+
+<!---****************  AQUI O CÓDIGO PLOTLY.JS  ****************--->
+ var trace = { 
+            x: [1, 2, 3, 4, 5],
+            y: [10, 15, 7, 12, 18],
+            type: 'scatter', 
+        };
+        Plotly.newPlot('grafico', [trace]); 
+        
+<!---***********************************************************--->
+
+    </script>
+
+</body>
+</html>
+```
+
+|  Se desejar simplificar ainda mais o *container* HTML para inserção do trecho de `Plotly.js`, basta fazer:
+
+```{js}
+
+<!DOCTYPE html>
+<html>
+<body>
+
+ <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<!---****************  AQUI O CÓDIGO PLOTLY.JS  ****************--->
+ var trace = { 
+            x: [1, 2, 3, 4, 5],
+            y: [10, 15, 7, 12, 18],
+            type: 'scatter', 
+        };
+        Plotly.newPlot('grafico', [trace]); 
+        
+<!---***********************************************************--->
+
+</body>
+</html>
+```
+
+
+::: {#fig-padrao}
+```{=html}
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  </head>
+<body>
+    <div id="grafico"></div>
+
+    <script>
+
+ var trace = {
+            x: [1, 2, 3, 4, 5],
+            y: [10, 15, 7, 12, 18],
+            type: 'scatter',
+        };
+        Plotly.newPlot('grafico', [trace]);
+
+    </script>
+
+</body>
+</html>
+```
+Um gráfico padrão com `Plotly.js`, exibindo os 13 ícones de interatividade pela barra de ferramentas (*ModeBar*).
+:::
+
+
+

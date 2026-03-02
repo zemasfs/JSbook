@@ -1,0 +1,788 @@
+---
+title: "Mais Plotly - Avançado"
+---
+
+# Tópicos Avançados de Plotly.js
+
+## 11. Animações e Transições
+
+Plotly.js permite criar animações entre diferentes estados de um gráfico:
+
+```{r, eval=FALSE}
+// Dados iniciais
+var trace1 = {
+  x: [1, 2, 3, 4, 5],
+  y: [1, 2, 3, 2, 1],
+  mode: 'lines+markers',
+  name: 'Conjunto 1',
+  marker: {
+    size: 8
+  }
+};
+
+var data = [trace1];
+
+// Layout inicial
+var layout = {
+  title: 'Gráfico com Animação',
+  xaxis: {
+    range: [0, 6]
+  },
+  yaxis: {
+    range: [0, 4]
+  }
+};
+
+Plotly.newPlot('myDiv', data, layout);
+
+// Atualizando o gráfico com animação
+var trace2 = {
+  x: [1, 2, 3, 4, 5],
+  y: [3, 1, 2, 3, 2],
+  mode: 'lines+markers',
+  name: 'Conjunto 2'
+};
+
+// Configuração da animação
+var frames = [
+  {
+    data: [trace2],
+    traces: [0],
+    layout: {}
+  }
+];
+
+var animation = {
+  data: [trace2],
+  traces: [0],
+  layout: {},
+  transition: {
+    duration: 500,
+    easing: 'cubic-in-out'
+  },
+  frame: {
+    duration: 500
+  }
+};
+
+// Executar animação após 2 segundos
+setTimeout(function() {
+  Plotly.animate('myDiv', frames, animation);
+}, 2000);
+```
+
+Para animações mais complexas com múltiplos frames:
+
+```{r, eval=FALSE}
+var n = 100;
+var x = new Array(n);
+var y = new Array(n);
+var frames = [];
+
+// Criando dados para cada frame
+for (var i = 0; i < n; i++) {
+  x[i] = Math.cos(i / 10) * (i / 10);
+  y[i] = Math.sin(i / 10) * (i / 10);
+
+  // Frame com apenas os primeiros i pontos
+  frames.push({
+    data: [{
+      x: x.slice(0, i+1),
+      y: y.slice(0, i+1)
+    }],
+    traces: [0],
+    layout: {}
+  });
+}
+
+var data = [{
+  x: [x[0]],
+  y: [y[0]],
+  mode: 'lines+markers'
+}];
+
+var layout = {
+  title: 'Espiral Animada',
+  xaxis: {range: [-10, 10]},
+  yaxis: {range: [-10, 10]}
+};
+
+Plotly.newPlot('myDiv', data, layout).then(function() {
+  Plotly.animate('myDiv', frames, {
+    frame: {
+      duration: 30,
+      redraw: false
+    },
+    transition: {
+      duration: 0
+    },
+    mode: 'immediate'
+  });
+});
+```
+
+## 12. Gráficos 3D
+
+Plotly.js suporta diversos tipos de visualizações tridimensionais:
+
+### Dispersão 3D
+
+```{r, eval=FALSE}
+var trace = {
+  x: [1, 2, 3, 4, 5],
+  y: [1, 2, 3, 4, 5],
+  z: [1, 4, 9, 16, 25],
+  mode: 'markers',
+  type: 'scatter3d',
+  marker: {
+    size: 8,
+    color: [1, 2, 3, 4, 5],
+    colorscale: 'Viridis',
+    opacity: 0.8
+  }
+};
+
+var data = [trace];
+var layout = {
+  title: 'Dispersão 3D',
+  scene: {
+    xaxis: {title: 'Eixo X'},
+    yaxis: {title: 'Eixo Y'},
+    zaxis: {title: 'Eixo Z'}
+  }
+};
+
+Plotly.newPlot('myDiv', data, layout);
+```
+
+### Superfície 3D
+
+```{r, eval=FALSE}
+// Gerando dados para a superfície
+var size = 25;
+var x = new Array(size);
+var y = new Array(size);
+var z = new Array(size);
+
+for(var i = 0; i < size; i++) {
+  x[i] = y[i] = -5 + 10 * i / (size-1);
+  z[i] = new Array(size);
+}
+
+for(var i = 0; i < size; i++) {
+  for(var j = 0; j < size; j++) {
+    var r2 = x[i]*x[i] + y[j]*y[j];
+    z[i][j] = Math.sin(r2) / r2;
+  }
+}
+
+var data = [{
+  z: z,
+  x: x,
+  y: y,
+  type: 'surface',
+  colorscale: 'Jet'
+}];
+
+var layout = {
+  title: 'Superfície 3D',
+  scene: {
+    xaxis: {title: 'X'},
+    yaxis: {title: 'Y'},
+    zaxis: {title: 'Z'},
+    camera: {
+      eye: {x: 1.8, y: 1.8, z: 1.8}
+    }
+  }
+};
+
+Plotly.newPlot('myDiv', data, layout);
+```
+
+## 13. Mapas de Calor e Contorno
+
+### Mapa de Calor
+
+```{r, eval=FALSE}
+var data = [
+  {
+    z: [[1, 20, 30, 50, 1], [20, 1, 60, 80, 30], [30, 60, 1, -10, 20], [50, 80, -10, 1, 30], [1, 30, 20, 30, 1]],
+    x: ['A', 'B', 'C', 'D', 'E'],
+    y: ['V', 'W', 'X', 'Y', 'Z'],
+    type: 'heatmap',
+    colorscale: 'Viridis',
+    showscale: true
+  }
+];
+
+var layout = {
+  title: 'Matriz de Correlação',
+  annotations: [],
+  xaxis: {
+    ticks: '',
+    side: 'top'
+  },
+  yaxis: {
+    ticks: '',
+    ticksuffix: ' ',
+    autorange: 'reversed'
+  }
+};
+
+// Adicionando valores como anotações no mapa de calor
+for (var i = 0; i < 5; i++) {
+  for (var j = 0; j < 5; j++) {
+    var currentValue = data[0].z[i][j];
+    var textColor = currentValue < 0 ? 'white' : 'black';
+    
+    var result = {
+      xref: 'x1',
+      yref: 'y1',
+      x: data[0].x[j],
+      y: data[0].y[i],
+      text: currentValue.toFixed(0),
+      font: {
+        family: 'Arial',
+        size: 12,
+        color: textColor
+      },
+      showarrow: false
+    };
+    layout.annotations.push(result);
+  }
+}
+
+Plotly.newPlot('myDiv', data, layout);
+```
+
+### Gráfico de Contorno
+
+```{r, eval=FALSE}
+var size = 100;
+var x = new Array(size);
+var y = new Array(size);
+var z = new Array(size);
+
+for(var i = 0; i < size; i++) {
+  x[i] = y[i] = -2 + 4 * i / (size-1);
+  z[i] = new Array(size);
+}
+
+for(var i = 0; i < size; i++) {
+  for(var j = 0; j < size; j++) {
+    var r2 = x[i]*x[i] + y[j]*y[j];
+    z[i][j] = Math.exp(-r2) * Math.cos(2*Math.PI*Math.sqrt(r2));
+  }
+}
+
+var data = [{
+  z: z,
+  x: x,
+  y: y,
+  type: 'contour',
+  colorscale: 'Jet',
+  contours: {
+    coloring: 'heatmap',
+    showlabels: true,
+    labelfont: {
+      family: 'Arial',
+      size: 12,
+      color: 'white',
+    }
+  }
+}];
+
+var layout = {
+  title: 'Gráfico de Contorno',
+  xaxis: {title: 'Eixo X'},
+  yaxis: {title: 'Eixo Y'}
+};
+
+Plotly.newPlot('myDiv', data, layout);
+```
+
+## 14. Interatividade Avançada
+
+### Plotly com Filtros Dinâmicos
+
+```{r, eval=FALSE}
+// Dados
+var allYears = [2013, 2014, 2015, 2016, 2017];
+var allData = {
+  2013: {x: [1, 2, 3, 4], y: [1, 2, 3, 4]},
+  2014: {x: [1, 2, 3, 4], y: [2, 3, 4, 5]},
+  2015: {x: [1, 2, 3, 4], y: [3, 4, 5, 6]},
+  2016: {x: [1, 2, 3, 4], y: [4, 5, 6, 7]},
+  2017: {x: [1, 2, 3, 4], y: [5, 6, 7, 8]}
+};
+
+// Função para atualizar o gráfico
+function updatePlot(year) {
+  var trace = {
+    x: allData[year].x,
+    y: allData[year].y,
+    mode: 'lines+markers',
+    name: 'Dados de ' + year
+  };
+  
+  var data = [trace];
+  
+  var layout = {
+    title: 'Dados do Ano ' + year,
+    xaxis: {range: [0, 5]},
+    yaxis: {range: [0, 10]}
+  };
+  
+  Plotly.react('myDiv', data, layout);
+}
+
+// Criar gráfico inicial
+updatePlot(2017);
+
+// Criar botões para os anos
+var yearDiv = document.createElement('div');
+yearDiv.style.textAlign = 'center';
+yearDiv.style.marginBottom = '20px';
+
+allYears.forEach(function(year) {
+  var button = document.createElement('button');
+  button.innerHTML = year;
+  button.style.margin = '5px';
+  button.onclick = function() { updatePlot(year); };
+  yearDiv.appendChild(button);
+});
+
+// Inserir os botões antes do gráfico
+var plotDiv = document.getElementById('myDiv');
+plotDiv.parentNode.insertBefore(yearDiv, plotDiv);
+```
+
+### Eventos e Callbacks
+
+```{r, eval=FALSE}
+// Dados
+var trace = {
+  x: [1, 2, 3, 4, 5],
+  y: [1, 2, 3, 4, 5],
+  mode: 'markers',
+  type: 'scatter',
+  marker: {
+    size: 20
+  }
+};
+
+var data = [trace];
+var layout = {
+  title: 'Gráfico Interativo com Eventos',
+  showlegend: false
+};
+
+// Criar o gráfico
+Plotly.newPlot('myDiv', data, layout)
+  .then(function() {
+    // Adicionar div para feedback
+    var infoDiv = document.createElement('div');
+    infoDiv.id = 'info';
+    infoDiv.style.padding = '10px';
+    infoDiv.style.marginTop = '10px';
+    infoDiv.style.border = '1px solid #ddd';
+    infoDiv.innerHTML = 'Clique em um ponto para ver suas coordenadas';
+    
+    var plotDiv = document.getElementById('myDiv');
+    plotDiv.parentNode.appendChild(infoDiv);
+    
+    // Eventos
+    plotDiv.on('plotly_click', function(data) {
+      var point = data.points[0];
+      var infoDiv = document.getElementById('info');
+      infoDiv.innerHTML = 'Você clicou no ponto:<br>' +
+                          'x = ' + point.x + '<br>' +
+                          'y = ' + point.y;
+      
+      // Destacar o ponto clicado
+      var update = {
+        'marker.color': ['red', 'blue', 'blue', 'blue', 'blue'],
+        'marker.size': [30, 20, 20, 20, 20]
+      };
+      
+      var pointIndex = point.pointIndex;
+      update['marker.color'][pointIndex] = 'red';
+      update['marker.size'][pointIndex] = 30;
+      
+      Plotly.restyle('myDiv', update, [0]);
+    });
+    
+    plotDiv.on('plotly_hover', function(data) {
+      var point = data.points[0];
+      var infoDiv = document.getElementById('info');
+      infoDiv.innerHTML = 'Hover sobre o ponto:<br>' +
+                          'x = ' + point.x + '<br>' +
+                          'y = ' + point.y;
+    });
+    
+    plotDiv.on('plotly_unhover', function() {
+      var infoDiv = document.getElementById('info');
+      infoDiv.innerHTML = 'Passe o mouse sobre um ponto para ver suas coordenadas';
+    });
+  });
+```
+
+## 15. Visualizações Estatísticas
+
+### Boxplot
+
+```{r, eval=FALSE}
+var y0 = [];
+var y1 = [];
+
+for (var i = 0; i < 50; i++) {
+  y0.push(Math.random() * 10);
+  y1.push(Math.random() * 10 + 5);
+}
+
+var trace1 = {
+  y: y0,
+  type: 'box',
+  name: 'Grupo A',
+  boxpoints: 'all',
+  jitter: 0.3,
+  pointpos: -1.8,
+  marker: {
+    color: 'rgb(7, 40, 89)'
+  }
+};
+
+var trace2 = {
+  y: y1,
+  type: 'box',
+  name: 'Grupo B',
+  boxpoints: 'all',
+  jitter: 0.3,
+  pointpos: -1.8,
+  marker: {
+    color: 'rgb(9, 56, 125)'
+  }
+};
+
+var data = [trace1, trace2];
+
+var layout = {
+  title: 'Comparação de Distribuições',
+  yaxis: {
+    title: 'Valores',
+    zeroline: false
+  },
+  boxmode: 'group'
+};
+
+Plotly.newPlot('myDiv', data, layout);
+```
+
+### Histograma
+
+```{r, eval=FALSE}
+// Gerando dados aleatórios
+var x1 = [];
+var x2 = [];
+
+for (var i = 0; i < 500; i++) {
+  x1.push(Math.random() * 5 + Math.random() * 10);
+  x2.push(Math.random() * 10 + Math.random() * 20);
+}
+
+var trace1 = {
+  x: x1,
+  type: 'histogram',
+  opacity: 0.7,
+  marker: {
+    color: 'rgba(255, 100, 102, 0.7)',
+  },
+  name: 'Distribuição A'
+};
+
+var trace2 = {
+  x: x2,
+  type: 'histogram',
+  opacity: 0.7,
+  marker: {
+    color: 'rgba(100, 200, 102, 0.7)',
+  },
+  name: 'Distribuição B'
+};
+
+var data = [trace1, trace2];
+
+var layout = {
+  title: 'Histograma Sobreposto',
+  xaxis: {title: 'Valores'},
+  yaxis: {title: 'Contagem'},
+  bargap: 0.05,
+  bargroupgap: 0.2,
+  barmode: 'overlay'
+};
+
+Plotly.newPlot('myDiv', data, layout);
+```
+
+## 16. Gráficos com Dados em Tempo Real
+
+```{r, eval=FALSE}
+// Configuração inicial
+Plotly.newPlot('myDiv', [{
+  y: [0],
+  type: 'line',
+  line: {color: '#80CAF6'}
+}]);
+
+// Função para adicionar dados
+function addData() {
+  Plotly.extendTraces('myDiv', {
+    y: [[Math.random() * 10]]
+  }, [0]);
+  
+  // Limitar visualização aos últimos 50 pontos
+  var graphDiv = document.getElementById('myDiv');
+  var data = graphDiv.data;
+  if(data[0].y.length > 50) {
+    Plotly.relayout('myDiv', {
+      xaxis: {
+        range: [data[0].y.length-50, data[0].y.length]
+      }
+    });
+  }
+  
+  // Continuar adicionando dados a cada segundo
+  setTimeout(addData, 1000);
+}
+
+// Iniciar a atualização
+addData();
+```
+
+## 17. Mapas Geográficos
+
+### Mapa de Dispersão Geográfica
+
+```{r, eval=FALSE}
+var data = [{
+  type: 'scattergeo',
+  mode: 'markers',
+  locations: ['FRA', 'DEU', 'ESP', 'ITA', 'GBR', 'USA', 'CAN', 'MEX', 'BRA', 'ARG', 'JPN', 'CHN', 'IND', 'AUS'],
+  marker: {
+    size: [20, 30, 15, 25, 18, 40, 30, 20, 35, 15, 25, 45, 40, 30],
+    color: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140],
+    colorscale: 'Viridis',
+    colorbar: {
+      title: 'Métrica',
+      ticksuffix: 'k'
+    },
+    line: {
+      color: 'black'
+    }
+  },
+  name: 'Dados por País',
+  text: ['França', 'Alemanha', 'Espanha', 'Itália', 'Reino Unido', 'Estados Unidos', 'Canadá', 'México', 'Brasil', 'Argentina', 'Japão', 'China', 'Índia', 'Austrália']
+}];
+
+var layout = {
+  title: 'Distribuição Global de Dados',
+  geo: {
+    scope: 'world',
+    resolution: 50,
+    showland: true,
+    landcolor: 'rgb(217, 217, 217)',
+    showocean: true,
+    oceancolor: 'rgb(230, 255, 255)',
+    showlakes: true,
+    lakecolor: 'rgb(230, 255, 255)',
+    showrivers: true,
+    rivercolor: 'rgb(230, 255, 255)',
+    showcountries: true,
+    countrycolor: 'rgb(255, 255, 255)',
+    countrywidth: 0.5,
+    projection: {
+      type: 'natural earth'
+    }
+  }
+};
+
+Plotly.newPlot('myDiv', data, layout);
+```
+
+### Mapa Coroplético (Choropleth)
+
+```{r, eval=FALSE}
+var data = [{
+  type: 'choropleth',
+  locations: ['ALA', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID'],
+  z: [12, 15, 22, 18, 40, 23, 19, 12, 30, 21, 16, 14],
+  locationmode: 'USA-states',
+  colorscale: 'Reds',
+  colorbar: {
+    title: 'Valor',
+    ticksuffix: '%'
+  },
+  marker: {
+    line: {
+      color: 'rgb(255,255,255)',
+      width: 2
+    }
+  }
+}];
+
+var layout = {
+  title: 'Mapa dos EUA por Estados',
+  geo: {
+    scope: 'usa',
+    showlakes: true,
+    lakecolor: 'rgb(255, 255, 255)'
+  }
+};
+
+Plotly.newPlot('myDiv', data, layout);
+```
+
+## 18. Personalização de Tooltips
+
+```{r, eval=FALSE}
+var trace = {
+  x: [1, 2, 3, 4, 5],
+  y: [10, 20, 30, 40, 50],
+  mode: 'markers',
+  type: 'scatter',
+  marker: {
+    size: 15
+  },
+  text: [
+    'Detalhe 1:<br>Valor adicional: 45%<br>Status: Completado',
+    'Detalhe 2:<br>Valor adicional: 12%<br>Status: Em progresso',
+    'Detalhe 3:<br>Valor adicional: 78%<br>Status: Não iniciado',
+    'Detalhe 4:<br>Valor adicional: 34%<br>Status: Completado',
+    'Detalhe 5:<br>Valor adicional: 90%<br>Status: Em progresso'
+  ],
+  hoverinfo: 'x+y+text',
+  hoverlabel: {
+    bgcolor: ['#c7c7c7', '#FF6692', '#636EFA', '#c7c7c7', '#FF6692'],
+    font: {
+      size: 14,
+      color: 'black'
+    },
+    bordercolor: 'black',
+    borderwidth: 1
+  }
+};
+
+var data = [trace];
+
+var layout = {
+  title: 'Tooltips Personalizados',
+  hovermode: 'closest'
+};
+
+Plotly.newPlot('myDiv', data, layout);
+```
+
+## 19. Plotly com Ranges/Sliders
+
+```{r, eval=FALSE}
+// Dados
+var x = [];
+var y = [];
+
+for (var i = 0; i < 500; i++) {
+  x.push(i);
+  y.push(Math.sin(i/30) * 10 + Math.random() * 2);
+}
+
+var trace = {
+  x: x,
+  y: y,
+  mode: 'lines',
+  line: {
+    color: 'rgb(55, 128, 191)',
+    width: 1
+  }
+};
+
+var data = [trace];
+
+var layout = {
+  title: 'Gráfico com Ranges/Sliders',
+  xaxis: {
+    rangeslider: {}, // Adiciona um slider abaixo do eixo X
+    type: 'linear'
+  },
+  yaxis: {
+    fixedrange: false // Permite zoom no eixo Y
+  },
+  shapes: [{
+    type: 'line',
+    x0: 0,
+    y0: 0,
+    x1: 500,
+    y1: 0,
+    line: {
+      color: 'rgb(200, 0, 0)',
+      width: 1,
+      dash: 'dash'
+    }
+  }]
+};
+
+Plotly.newPlot('myDiv', data, layout);
+```
+
+## 20. Plotly com WebGL para Grandes Conjuntos de Dados
+
+Para grandes conjuntos de dados (milhares de pontos), é recomendável usar o tipo `scattergl` em vez de `scatter`:
+
+```{r, eval=FALSE}
+// Gerando um grande conjunto de dados
+var x = [];
+var y = [];
+var colors = [];
+var size = [];
+
+for (var i = 0; i < 10000; i++) {
+  x.push(Math.random() * 100);
+  y.push(Math.random() * 100);
+  colors.push(Math.random() * 255);
+  size.push(Math.random() * 15 + 5);
+}
+
+var trace = {
+  x: x,
+  y: y,
+  mode: 'markers',
+  type: 'scattergl', // Usando WebGL para melhor desempenho
+  marker: {
+    size: size,
+    color: colors,
+    colorscale: 'Jet',
+    line: {
+      width: 0
+    },
+    opacity: 0.5
+  }
+};
+
+var data = [trace];
+
+var layout = {
+  title: 'Grande Conjunto de Dados com WebGL',
+  xaxis: {
+    title: 'Variável X'
+  },
+  yaxis: {
+    title: 'Variável Y'
+  }
+};
+
+Plotly.newPlot('myDiv', data, layout);
+```
+
+## Conclusão dos Tópicos Avançados
+
+Este complemento ao tutorial principal explora recursos mais avançados do Plotly.js, incluindo animações, visualizações 3D, mapas geográficos e técnicas para lidar com grandes conjuntos de dados. Estes recursos permitem criar visualizações de dados sofisticadas e interativas que vão além dos gráficos básicos.
+
+Para um desenvolvimento mais aprofundado, recomenda-se consultar a [documentação oficial do Plotly.js](https://plotly.com/javascript/) e explorar seus exemplos para inspiração.

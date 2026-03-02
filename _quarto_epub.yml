@@ -1,0 +1,43 @@
+project:
+  type: book
+
+book:
+  title: "A linguagem JavaScript"
+  chapters:
+    - index.qmd
+    - linguagem.qmd # estrutura
+    - primeiros.qmd # primeiros comandos, tipos de dados, constantes
+    - estruturaJS.qmd # aritmética, arrays, JS e linguagem a objeto
+    - estruturaJS2.qmd # funções, geração de no. aleatório
+    - estrutControle.qmd # estruturas de controle
+    - estrutContrJSPlotly.qmd # estruturas de controle no JSPlotly
+
+lang: pt-BR
+bibliography: references.bib
+crossref:
+  chapters: true
+
+# arquivos estáticos a copiar
+resources:
+  - apps/**
+
+format:
+  epub:
+    toc: true
+    number-sections: true
+    epub3: true
+    default-image-extension: png
+    html-math-method: mathml
+
+  html:
+    toc: false
+    page-layout: full
+    sidebar: true          # 👈 fica aqui (html-only)
+    theme:
+      light: zephyr        # use string simples
+      dark: slate          # (evite listas/objetos complexos no começo)
+
+  pdf:
+    documentclass: scrreprt
+
+  docx: default
